@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartSDLC — Teaser</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0B0E17}
+body{font-family:'Inter',sans-serif;color:#fff;display:flex;align-items:center;justify-content:center}
+
+canvas#bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+
+.stage{position:relative;z-index:1;width:100%;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center}
+
+/* Each scene is absolutely positioned, fades in/out */
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  opacity:0;transition:opacity 0.8s ease;padding:40px;pointer-events:none}
+.scene.active{opacity:1;pointer-events:auto}
+
+/* Typography */
+.scene h1{font-size:clamp(42px,7vw,80px);font-weight:900;letter-spacing:-2px;line-height:1.05;margin-bottom:16px}
+.scene h2{font-size:clamp(28px,4.5vw,52px);font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:12px}
+.scene h3{font-size:clamp(20px,3vw,36px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+.scene p{font-size:clamp(16px,2.2vw,24px);color:rgba(255,255,255,0.6);max-width:700px;line-height:1.5}
+.scene .mono{font-family:'Space Mono',monospace;font-size:clamp(11px,1.5vw,16px);letter-spacing:2px;text-transform:uppercase}
+
+.grad-text{background:linear-gradient(135deg,#3B82F6,#10B981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.grad-purple{background:linear-gradient(135deg,#8B5CF6,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.red-text{color:#EF4444}
+.green-text{color:#10B981}
+.amber-text{color:#F59E0B}
+.blue-text{color:#3B82F6}
+.dim{color:rgba(255,255,255,0.45)}
+
+/* Pain cards */
+.pain-row{display:flex;gap:20px;margin-top:32px;flex-wrap:wrap;justify-content:center}
+.pain-card{
+  padding:24px 28px;border-radius:16px;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);max-width:260px;text-align:left;
+  opacity:0;transform:translateY(20px);
+}
+.pain-card.show{opacity:1;transform:translateY(0);transition:all 0.6s ease}
+.pain-card .icon{font-size:28px;margin-bottom:8px}
+.pain-card .name{font-size:18px;font-weight:700;color:#EF4444;margin-bottom:6px}
+.pain-card .desc{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5}
+
+/* Era timeline */
+.era-stack{display:flex;flex-direction:column;gap:8px;margin-top:28px;width:100%;max-width:600px}
+.era-bar{
+  display:flex;align-items:center;gap:14px;padding:12px 20px;border-radius:10px;
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+  opacity:0;transform:translateX(-30px);
+}
+.era-bar.show{opacity:1;transform:translateX(0);transition:all 0.5s ease}
+.era-bar.active{border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.06);box-shadow:0 0 30px rgba(16,185,129,0.15)}
+.era-bar .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.era-bar .label{font-size:clamp(13px,1.8vw,17px);font-weight:600;flex:1}
+.era-bar .years{font-size:11px;font-family:'Space Mono',monospace;color:rgba(255,255,255,0.3)}
+
+/* Feature highlights */
+.feat-row{display:flex;gap:16px;margin-top:28px;flex-wrap:wrap;justify-content:center}
+.feat-pill{
+  padding:14px 22px;border-radius:12px;background:rgba(59,130,246,0.08);
+  border:1px solid rgba(59,130,246,0.15);font-size:clamp(12px,1.5vw,15px);font-weight:600;
+  display:flex;align-items:center;gap:8px;
+  opacity:0;transform:scale(0.9);
+}
+.feat-pill.show{opacity:1;transform:scale(1);transition:all 0.5s ease}
+.feat-pill .icon{font-size:18px}
+
+/* CTA scene */
+.qr-box{
+  width:180px;height:180px;border-radius:16px;background:#fff;
+  display:flex;align-items:center;justify-content:center;margin:24px auto;
+  box-shadow:0 0 60px rgba(59,130,246,0.3);
+}
+.qr-box canvas{border-radius:8px}
+
+/* Typewriter */
+.typewriter{overflow:hidden;border-right:2px solid var(--accent,#3B82F6);white-space:nowrap;display:inline-block;
+  animation:typing 2s steps(40,end),blink 0.75s step-end infinite}
+@keyframes typing{from{width:0}to{width:100%}}
+@keyframes blink{from,to{border-color:transparent}50%{border-color:#3B82F6}}
+
+/* Pulse ring */
+.pulse-ring{
+  position:absolute;width:300px;height:300px;border-radius:50%;
+  border:2px solid rgba(59,130,246,0.15);
+  animation:pulse-expand 3s ease-out infinite;
+}
+@keyframes pulse-expand{0%{transform:scale(0.5);opacity:0.8}100%{transform:scale(2);opacity:0}}
+
+/* Progress bar at bottom */
+.progress-bar{position:fixed;bottom:0;left:0;height:3px;background:linear-gradient(90deg,#3B82F6,#10B981);z-index:10;transition:width 0.3s linear}
+
+/* Replay button */
+.replay-btn{
+  margin-top:24px;padding:12px 28px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);
+  background:transparent;color:#fff;font-size:14px;font-weight:600;cursor:pointer;
+  transition:border-color 0.3s;
+}
+.replay-btn:hover{border-color:#3B82F6}
+
+/* ── GIF DEMO CAROUSEL ── */
+.gif-carousel{position:relative;width:100%;max-width:880px;height:380px;margin-top:12px}
+.gif-slide{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  display:flex;flex-direction:column;align-items:center;
+  opacity:0;transition:opacity 1s ease;
+}
+.gif-slide.active{opacity:1}
+.gif-label{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:5px 16px;border-radius:20px;
+  font-size:12px;font-weight:600;margin-bottom:8px;letter-spacing:0.5px;
+}
+.gif-label-director{background:rgba(16,185,129,0.12);color:#10B981;border:1px solid rgba(16,185,129,0.25)}
+.gif-label-po{background:rgba(59,130,246,0.12);color:#3B82F6;border:1px solid rgba(59,130,246,0.25)}
+.gif-label-dev{background:rgba(139,92,246,0.12);color:#8B5CF6;border:1px solid rgba(139,92,246,0.25)}
+.gif-frame{
+  width:100%;flex:1;border-radius:12px;
+  border:1px solid rgba(255,255,255,0.08);overflow:hidden;
+  box-shadow:0 8px 40px rgba(0,0,0,0.5);
+}
+.gif-frame img{width:100%;height:100%;object-fit:cover;display:block}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="stage">
+  <!-- S0: Logo reveal -->
+  <div class="scene" id="s0">
+    <div class="mono dim" style="margin-bottom:16px">DevUp 2026</div>
+    <h1><span class="grad-text">SmartSDLC</span></h1>
+    <p>The Missing Layer Between Strategy &amp; Delivery</p>
+  </div>
+
+  <!-- S1: The problem hook -->
+  <div class="scene" id="s1">
+    <div class="mono amber-text" style="margin-bottom:12px">The Reality Check</div>
+    <h2>Your team <span class="red-text">tripled</span>.<br>Your output? <span class="dim">+50%.</span></h2>
+    <p>Where did the rest go?</p>
+  </div>
+
+  <!-- S2: Three taxes -->
+  <div class="scene" id="s2">
+    <div class="mono red-text" style="margin-bottom:8px">Three invisible taxes</div>
+    <h3>Every engineering org pays them</h3>
+    <div class="pain-row">
+      <div class="pain-card" id="pc1"><div class="icon">&#x1F4C9;</div><div class="name">Scale Tax</div><div class="desc">Coordination overhead grows faster than headcount</div></div>
+      <div class="pain-card" id="pc2"><div class="icon">&#x1F573;&#xFE0F;</div><div class="name">Context Gap</div><div class="desc">Intent lives in Confluence. Code in GitHub. Nobody connects why to what.</div></div>
+      <div class="pain-card" id="pc3"><div class="icon">&#x1F6A6;</div><div class="name">Coordination Trap</div><div class="desc">Senior devs spend 60% answering "where is this?" instead of building.</div></div>
+    </div>
+  </div>
+
+  <!-- S3: The question -->
+  <div class="scene" id="s3">
+    <h2>What if the system<br>remembered <span class="grad-text">why</span>?</h2>
+    <p style="margin-top:12px">What if every line of code traced back to a business decision?</p>
+  </div>
+
+  <!-- S4: Era timeline -->
+  <div class="scene" id="s4">
+    <div class="mono blue-text" style="margin-bottom:8px">The Evolution of Delivery</div>
+    <h3>Five eras. One destination.</h3>
+    <div class="era-stack">
+      <div class="era-bar" id="eb1"><div class="dot" style="background:#6B7280"></div><div class="label">Waterfall</div><div class="years">1970s–2000s</div></div>
+      <div class="era-bar" id="eb2"><div class="dot" style="background:#F59E0B"></div><div class="label">Agile</div><div class="years">2001–2015</div></div>
+      <div class="era-bar" id="eb3"><div class="dot" style="background:#3B82F6"></div><div class="label">DevOps</div><div class="years">2010–2022</div></div>
+      <div class="era-bar" id="eb4"><div class="dot" style="background:#8B5CF6"></div><div class="label">AI-Assisted</div><div class="years">2022–2025</div></div>
+      <div class="era-bar active" id="eb5"><div class="dot" style="background:#10B981"></div><div class="label green-text" style="font-weight:800">Autonomous SDLC</div><div class="years">2025+</div></div>
+    </div>
+  </div>
+
+  <!-- S5: What SmartSDLC does -->
+  <div class="scene" id="s5">
+    <div class="mono green-text" style="margin-bottom:8px">Introducing SmartSDLC</div>
+    <h2>Intent to Production.<br><span class="grad-text">One Connected Graph.</span></h2>
+    <div class="feat-row">
+      <div class="feat-pill" id="fp1"><span class="icon">&#x1F9E0;</span>Intent Lineage</div>
+      <div class="feat-pill" id="fp2"><span class="icon">&#x1F310;</span>Delivery Graph</div>
+      <div class="feat-pill" id="fp3"><span class="icon">&#x1F50D;</span>AI Validation</div>
+      <div class="feat-pill" id="fp4"><span class="icon">&#x1F3AF;</span>Role Command Centers</div>
+      <div class="feat-pill" id="fp5"><span class="icon">&#x1F9EC;</span>Institutional Memory</div>
+      <div class="feat-pill" id="fp6"><span class="icon">&#x1F4CA;</span>Closed-Loop Delivery</div>
+    </div>
+  </div>
+
+  <!-- S6: Live Product Demo GIFs -->
+  <div class="scene" id="s6">
+    <div class="mono green-text" style="margin-bottom:6px">Live Product</div>
+    <h3>See It In Action</h3>
+    <div class="gif-carousel">
+      <div class="gif-slide" id="gs1">
+        <div class="gif-label gif-label-director">Director Command Center</div>
+        <div class="gif-frame"><img src="./smartsdlc_director_flow.gif" alt="Director View"></div>
+      </div>
+      <div class="gif-slide" id="gs2">
+        <div class="gif-label gif-label-po">PO &amp; Planning Forge</div>
+        <div class="gif-frame"><img src="./smartsdlc_po_flow.gif" alt="PO View"></div>
+      </div>
+      <div class="gif-slide" id="gs3">
+        <div class="gif-label gif-label-dev">Developer IDE &amp; Kickstart</div>
+        <div class="gif-frame"><img src="./smartsdlc_planning_flow.gif" alt="Developer View"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S7: The shift -->
+  <div class="scene" id="s7">
+    <h2>Stop shipping code.<br>Start shipping <span class="grad-purple">intent</span>.</h2>
+    <p style="margin-top:12px">When the system remembers why, engineers build what matters.</p>
+  </div>
+
+  <!-- S8: CTA + QR -->
+  <div class="scene" id="s8">
+    <div class="mono green-text" style="margin-bottom:8px">Take the Quiz</div>
+    <h3>What SDLC Time Zone<br>Is <span class="grad-text">Your Org</span> In?</h3>
+    <p style="margin-bottom:8px">Scan. Answer 8 questions. Discover your era.</p>
+    <div class="qr-box"><canvas id="qrCanvas" width="150" height="150"></canvas></div>
+    <p class="dim" style="font-size:14px;margin-top:8px">Visit us at the SmartSDLC booth &bull; DevUp 2026</p>
+    <button class="replay-btn" onclick="replay()">&#x21BB; Replay</button>
+  </div>
+</div>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<script>
+// ─── PARTICLE BACKGROUND ─────────────────────────────────────────
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = (Math.random() - 0.5) * 0.3;
+    this.r = Math.random() * 1.5 + 0.5;
+    this.alpha = Math.random() * 0.3 + 0.05;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < 0 || this.x > W) this.vx *= -1;
+    if (this.y < 0 || this.y > H) this.vy *= -1;
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(59,130,246,${this.alpha})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < 80; i++) particles.push(new Particle());
+
+function animate() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => { p.update(); p.draw(); });
+  // Connection lines
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 120) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(59,130,246,${0.06 * (1 - dist / 120)})`;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(animate);
+}
+animate();
+
+// ─── SCENE SEQUENCER ──────────────────────────────────────────────
+let gifTimer = null;
+function cycleGifs() {
+  const slides = ['gs1','gs2','gs3'];
+  let idx = 0;
+  slides.forEach(id => document.getElementById(id).classList.remove('active'));
+  document.getElementById(slides[0]).classList.add('active');
+  gifTimer = setInterval(() => {
+    document.getElementById(slides[idx]).classList.remove('active');
+    idx = (idx + 1) % slides.length;
+    document.getElementById(slides[idx]).classList.add('active');
+  }, 5000);
+}
+function stopGifCycle() { if (gifTimer) { clearInterval(gifTimer); gifTimer = null; } }
+
+const scenes = [
+  { id: 's0', dur: 4000, enter: () => {} },
+  { id: 's1', dur: 4500, enter: () => {} },
+  { id: 's2', dur: 6000, enter: () => {
+    setTimeout(() => document.getElementById('pc1').classList.add('show'), 300);
+    setTimeout(() => document.getElementById('pc2').classList.add('show'), 700);
+    setTimeout(() => document.getElementById('pc3').classList.add('show'), 1100);
+  }},
+  { id: 's3', dur: 4000, enter: () => {} },
+  { id: 's4', dur: 6000, enter: () => {
+    ['eb1','eb2','eb3','eb4','eb5'].forEach((id, i) => {
+      setTimeout(() => document.getElementById(id).classList.add('show'), 300 + i * 400);
+    });
+  }},
+  { id: 's5', dur: 6000, enter: () => {
+    ['fp1','fp2','fp3','fp4','fp5','fp6'].forEach((id, i) => {
+      setTimeout(() => document.getElementById(id).classList.add('show'), 200 + i * 350);
+    });
+  }},
+  { id: 's6', dur: 16000, enter: () => { cycleGifs(); }, exit: () => { stopGifCycle(); } },
+  { id: 's7', dur: 4000, enter: () => {} },
+  { id: 's8', dur: 12000, enter: () => { drawQR(); } },
+];
+
+const totalDur = scenes.reduce((s, sc) => s + sc.dur, 0);
+let currentScene = -1;
+let elapsed = 0;
+let running = false;
+
+function showScene(idx) {
+  // Call exit handler on previous scene
+  if (currentScene >= 0 && currentScene < scenes.length && scenes[currentScene].exit) {
+    scenes[currentScene].exit();
+  }
+  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+  if (idx < scenes.length) {
+    document.getElementById(scenes[idx].id).classList.add('active');
+    scenes[idx].enter();
+  }
+  currentScene = idx;
+}
+
+function runSequence() {
+  running = true;
+  elapsed = 0;
+  // Reset animated elements
+  document.querySelectorAll('.pain-card,.era-bar,.feat-pill').forEach(el => el.classList.remove('show'));
+
+  let sceneIdx = 0;
+  showScene(0);
+
+  const interval = setInterval(() => {
+    elapsed += 100;
+    // Update progress bar
+    const pct = Math.min(100, (elapsed / totalDur) * 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+
+    // Check scene transitions
+    let cumDur = 0;
+    for (let i = 0; i < scenes.length; i++) {
+      cumDur += scenes[i].dur;
+      if (elapsed < cumDur) {
+        if (i !== currentScene) showScene(i);
+        break;
+      }
+    }
+
+    if (elapsed >= totalDur) {
+      clearInterval(interval);
+      running = false;
+    }
+  }, 100);
+}
+
+function replay() {
+  if (running) return;
+  runSequence();
+}
+
+// Auto-start
+setTimeout(runSequence, 500);
+
+// ─── QR CODE ──────────────────────────────────────────────────────
+const QUIZ_URL = './sdlc_assessment.html';
+
+function drawQR() {
+  const c = document.getElementById('qrCanvas');
+  if (!c) return;
+  const cx = c.getContext('2d');
+  const size = 150;
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = () => { cx.drawImage(img, 0, 0, size, size); };
+  img.onerror = () => {
+    // Fallback: draw placeholder QR pattern
+    cx.fillStyle = '#fff';
+    cx.fillRect(0, 0, size, size);
+    cx.fillStyle = '#0B0E17';
+    // Finder patterns
+    const drawFinder = (x, y, s) => {
+      cx.fillRect(x, y, s, s);
+      cx.clearRect(x + s/7, y + s/7, s*5/7, s*5/7);
+      cx.fillRect(x + s*2/7, y + s*2/7, s*3/7, s*3/7);
+    };
+    drawFinder(8, 8, 42);
+    drawFinder(100, 8, 42);
+    drawFinder(8, 100, 42);
+    // Random data modules
+    for (let i = 0; i < 200; i++) {
+      const mx = 8 + Math.floor(Math.random() * 134);
+      const my = 8 + Math.floor(Math.random() * 134);
+      if (Math.random() > 0.5) cx.fillRect(mx, my, 4, 4);
+    }
+    // Center text
+    cx.fillStyle = '#3B82F6';
+    cx.font = 'bold 10px Inter';
+    cx.textAlign = 'center';
+    cx.fillText('SCAN ME', 75, 78);
+  };
+  const encoded = encodeURIComponent(QUIZ_URL);
+  img.src = `https://chart.googleapis.com/chart?cht=qr&chs=${size}x${size}&chl=${encoded}&choe=UTF-8&chld=M|2`;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart SDLC — Final Script v5</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Georgia', 'Times New Roman', serif; background: #FAFAF8; color: #1a1a1a; max-width: 900px; margin: 0 auto; padding: 20px 30px 60px; line-height: 1.7; }
+  
+  .cover { text-align: center; padding: 50px 20px 40px; margin-bottom: 40px; border-bottom: 3px solid #1B1F3B; }
+  .cover h1 { font-size: 32px; color: #1B1F3B; letter-spacing: 2px; margin-bottom: 8px; }
+  .cover h2 { font-size: 16px; color: #888; font-weight: 400; letter-spacing: 1px; }
+  .cover .meta { font-size: 13px; color: #aaa; margin-top: 16px; }
+  
+  .act { background: #1B1F3B; color: white; padding: 12px 24px; margin: 40px 0 24px; font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+  
+  .slide { margin: 28px 0; padding: 0 0 28px; border-bottom: 1px solid #e8e8e8; }
+  .slide:last-child { border-bottom: none; }
+  
+  .slide-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .slide-num { font-size: 12px; font-weight: 700; color: white; padding: 3px 12px; border-radius: 12px; letter-spacing: 0.5px; }
+  .slide-num.nar { background: #2C5F8A; }
+  .slide-num.sam { background: #7B4B94; }
+  .slide-num.gob { background: #2E7D5B; }
+  .slide-num.all { background: #D4A843; }
+  .slide-num.int { background: #E8652A; }
+  
+  .timing { font-size: 12px; color: #999; font-style: italic; }
+  
+  .speaker { font-size: 13px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .speaker.nar { color: #2C5F8A; }
+  .speaker.sam { color: #7B4B94; }
+  .speaker.gob { color: #2E7D5B; }
+  
+  .script { font-size: 15.5px; color: #2a2a2a; }
+  .script p { margin-bottom: 10px; }
+  .script .key { font-weight: 700; }
+  .script .pause { color: #E8652A; font-size: 13px; font-style: italic; display: block; margin: 8px 0; }
+  
+  .stage-note { background: #FFF5EE; border-left: 3px solid #E8652A; padding: 8px 14px; margin: 10px 0; font-size: 13px; color: #C04B15; }
+  .handoff { font-size: 12px; color: #2C5F8A; font-weight: 600; margin-top: 8px; }
+  
+  .change-tag { background: #FFFDE8; border-left: 3px solid #D4A843; padding: 8px 14px; margin: 10px 0; font-size: 12px; color: #8B7730; }
+  .change-tag strong { color: #6B5A10; }
+  
+  .interaction { background: #FFF8F5; border: 1px solid #F0D0C0; border-radius: 8px; padding: 16px 20px; margin: 20px 0; }
+  .interaction .label { font-size: 12px; font-weight: 700; color: #E8652A; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+  
+  @media print { 
+    body { max-width: 100%; padding: 10px; }
+    .act { break-before: page; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>SMART SDLC</h1>
+  <h2>The Missing Layer Between Strategy and Delivery</h2>
+  <div class="meta">
+    DevUp / Cloud &amp; AI Summit — March 2026<br>
+    Narayanan · Sambit · Gobind | JPMorganChase<br>
+    40 Slides · 35 Minutes · Final Script v5
+  </div>
+</div>
+
+<!-- ============================== ACT 1 ============================== -->
+<div class="act">Act 1 — The Reality of Scale (0:00 – 14:00)</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num nar">Slide 1</span>
+    <span class="timing">0:00</span>
+  </div>
+  <div class="speaker nar">NARAYANAN</div>
+  <div class="script">
+    <p>"Imagine for a moment.</p>
+    <p>Imagine it is 2028. You are running a bank with the asset base of a global giant, but the agility of a Series B fintech.</p>
+    <p>Imagine a regulator asks you why a specific line of code exists in your trading platform. Instead of launching a three-week audit, you press a button. In seconds, the system traces that code back to the Jira ticket, back to the architecture decision record, and back to the original business intent defined in a strategy meeting three years prior.</p>
+    <p>Imagine a world where complexity doesn't slow you down — it makes you smarter.</p>
+    <p>Good morning. <span class="key">That is not fiction. That is Coherence. And that is what we are here to build.</span>"</p>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num gob">Slide 2</span>
+    <span class="timing">~1:00</span>
+  </div>
+  <div class="speaker gob">GOBIND</div>
+  <div class="script">
+    <p>"To build that world, we had to combine skills that usually don't sit in the same room.</p>
+    <p>Look at the slide behind me. For this initiative, we merged Software Engineering and AI. We combined the discipline of defining <em>why</em> we build things — with AI that can reason over our internal documents. We combined Scalable Governance with autonomous artifact generation. We didn't just build a tool; we built a discipline."</p>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num all">Slide 3</span>
+    <span class="timing">~2:00</span>
+  </div>
+  <div class="speaker nar">NARAYANAN</div>
+  <div class="script"><p>"My name is Narayanan. I represent Strategy — the lens of business value, scale, and long-term coherence."</p></div>
+  <div class="speaker gob">GOBIND</div>
+  <div class="script"><p>"I'm Gobind. I represent the System — architecture, governance, and structural integrity."</p></div>
+  <div class="speaker sam">SAMBIT</div>
+  <div class="script">
+    <p>"And I'm Sambit. I represent the Builders — the engineers who turn intent into working systems."</p>
+    <p>"And as you'll notice today… we're also unapologetic fans of Jurassic Park. Because honestly, no movie illustrates the failure modes of large enterprise systems better."</p>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num nar">Slide 4</span>
+    <span class="timing">~2:30</span>
+  </div>
+  <div class="speaker nar">NARAYANAN</div>
+  <div class="script">
+    <p>"Here is our path today. We will start with the reality of scale — the pain we all feel. We will dissect the failure modes in the current tooling system. We will introduce the 'Missing Layer' — the Smart SDLC. And finally, we will show you the hard outcomes."</p>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num nar">Slide 5</span>
+    <span class="timing">~3:00</span>
+  </div>
+  <div class="speaker nar">NARAYANAN</div>
+  <div class="script"><p>"Let's start with the Scale Reality."</p></div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num nar">Slide 6</span>
+    <span class="timing">~3:15</span>
+  </div>
+  <div class="speaker nar">NARAYANAN</div>
+  <div class="script">
+    <p>"In Jurassic Park, John Hammond famously said he 'spared no expense.' In a global bank, we do the same. We hire the top 1%. We invest in best-in-class cloud. We build robust governance. We scale globally. And it works. Until it doesn't.</p>
+    <p>As the park grows, something subtle happens. You're no longer building dinosaurs. You're coordinating between 50 control rooms.</p>
+    <p>As scale increases, technical capability improves… but coordination complexity grows faster. That is the paradox.</p>
+    <p>The thesis on this slide says: 'Smart SDLC removes the Scale Tax.' So what is the Scale Tax? It's not bad code. It's not lack of talent. <span class="key">It is the friction that emerges when complexity outpaces human coordination.</span>"</p>
+  </div>
+  <div class="interaction">
+    <div class="label">Interaction 1 — The Calendar Check</div>
+    <div class="speaker nar">NARAYANAN</div>
+    <div class="script">
+      <p>"Quick show of hands: Raise your hand if you've ever been on a project where 'Execution' took two days, but alignment, approvals, environment sync, sign-offs, and go-live coordination took two weeks. Or months?"</p>
+      <span class="pause">Wait for hands. Count to 3.</span>
+      <p>"Exactly. <span class="key">The tax of coordination is now higher than the cost of the code.</span>"</p>
+    </div>
+  </div>
+  <div class="handoff">→ Hand to SAMBIT</div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num sam">Slide 7</span>
+    <span class="timing">~5:30</span>
+  </div>
+  <div class="speaker sam">SAMBIT</div>
+  <div class="script">
+    <p>"This is the paradox of modern delivery. Technically, we succeed. But the energy required to keep everything aligned grows non-linearly. More meetings. More trackers. More status decks. We are scaling talent… but we are also scaling drag.</p>
+    <p>That drag is the Scale Tax. And the larger the institution, the heavier it becomes. <span class="key">Smart SDLC is not about faster coding. It is about reducing the cost of coordination.</span>"</p>
+  </div>
+  <div class="handoff">→ Hand to GOBIND</div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num gob">Slide 8</span>
+    <span class="timing">~6:15</span>
+  </div>
+  <div class="speaker gob">GOBIND</div>
+  <div class="script">
+    <p>"As teams grow, the number of interactions grows exponentially. Focus fragments. Shared memory decays. The unknowns multiply. <span class="key">This isn't incompetence. It's entropy.</span></p>
+    <p>We try to solve it by adding more people. But every new person introduces new edges in the network. More conversations. More assumptions. More interpretations."</p>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num gob">Slide 9</span>
+    <span class="timing">~6:50</span>
+  </div>
+  <div class="speaker gob">GOBIND</div>
+  <div class="script">
+    <p>"This is the next failure mode. Not lack of effort. Not lack of talent. But loss of shared context.</p>
+    <p>In Jurassic Park, the failure wasn't that the system lacked controls. It was that the control room didn't see what the field saw. Information existed. But it wasn't coherent."</p>
+    <span class="pause">Pause</span>
+    <p>"In our world, we call this <span class="key">the Context Gap.</span>"</p>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num sam">Slide 10</span>
+    <span class="timing">~7:20</span>
+  </div>
+  <div class="speaker sam">SAMBIT</div>
+  <div class="script">
+    <p>"Think about this. A developer implements exactly what the ticket says. QA tests exactly what the spec says. Risk reviews exactly what the document says. And yet — production behaves in a way no one expected. Why? Because each role operated on a slightly different understanding of intent."</p>
+  </div>
+  <div class="interaction">
+    <div class="label">Interaction 2 — The Digital Detective</div>
+    <div class="speaker sam">SAMBIT</div>
+    <div class="script">
+      <p>"Raise your hand if you've ever seen a feature built correctly — but not solving the actual business problem. Or a change approved — but misunderstood downstream. Or a release delayed because two teams had different interpretations of the same requirement."</p>
+      <span class="pause">Wait for hands.</span>
+      <p>"That is not execution failure. <span class="key">That's context drift.</span>"</p>
+    </div>
+    <div class="speaker gob">GOBIND</div>
+    <div class="script">
+      <p>"When context fragments, we do not slow down immediately. We misalign quietly. And <span class="key">misalignment compounds.</span> That's the Context Gap. And every time context is reconstructed manually — the Scale Tax increases."</p>
+    </div>
+  </div>
+  <div class="handoff">→ Hand to NARAYANAN</div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num nar">Slide 11</span>
+    <span class="timing">~8:15</span>
+  </div>
+  <div class="speaker nar">NARAYANAN</div>
+  <div class="script">
+    <p>"This also leads to the Coordination Trap. Our systems are silent. They store artifacts. But they don't preserve intent.</p>
+    <p>So what happens? We take our best architects — like Gobind — and we turn them into Human Routers. They attend meetings not to design systems, but to explain what was already decided. They re-explain why a field exists. Why a constraint was introduced. Why a performance trade-off was accepted. Same context. Different audience. Again. And again. They are not routing packets. <span class="key">They are routing memory. And that is a tragic misallocation of talent.</span></p>
+    <p>Every time context is carried by a human instead of a system, you create a single point of failure. When that person leaves, the architecture leaves with them."</p>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num nar">Slide 12</span>
+    <span class="timing">~9:30</span>
+  </div>
+  <div class="speaker nar">NARAYANAN</div>
+  <div class="script">
+    <p>"Consider Jurassic Park. Look at the Left Side. This was John Hammond's Intent: 'Move the dinosaurs to the grassy area.' Simple. Logical.</p>
+    <p>Now look at the Right Side. The same instruction is being interpreted five different ways. Different teams. Different assumptions. Different memory.</p>
+    <p>Dinosaurs are just standing in the wrong place. Because the fences — our governance, our documentation, our tooling — did not carry intent with precision. <span class="key">The failure didn't happen in execution. It happened in translation.</span>"</p>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num nar">Slide 13</span>
+    <span class="timing">~10:15</span>
+  </div>
+  <div class="speaker nar">NARAYANAN</div>
+  <div class="script">
+    <p>"This slide summarizes the crisis. Not a delivery issue. Not a talent issue. A systems issue.</p>
+    <p><span class="key">The Paradox:</span> As we scale capability, coordination cost grows faster than execution cost.</p>
+    <p><span class="key">The Context Gap:</span> Intent decays over time. Each role optimizes locally. Shared memory fragments. We reconstruct decisions repeatedly — because the system does not remember coherently.</p>
+    <p><span class="key">The Coordination Trap:</span> Meeting Time up 40%. This is not collaboration. This is humans acting as routers — manually transmitting intent between systems, teams, and functions. We are moving information, instead of compounding intelligence."</p>
+  </div>
+  <div class="handoff">→ Hand to SAMBIT</div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num sam">Slide 14</span>
+    <span class="timing">~11:00</span>
+  </div>
+  <div class="speaker sam">SAMBIT</div>
+  <div class="script">
+    <p>"At this point, a fair question. Don't we already have tools for this? We invest heavily in DevOps. We have world-class platforms. So why does the Scale Tax still exist?</p>
+    <p><span class="key">Because our tools optimize execution. They do not preserve intent.</span>"</p>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num sam">Slide 15</span>
+    <span class="timing">~11:20</span>
+  </div>
+  <div class="speaker sam">SAMBIT</div>
+  <div class="script">
+    <p>"Look at our stack. Jira, Git, ServiceNow, CI/CD, Monitoring, Dashboards. We are not under-tooled. We are deeply instrumented. But each tool solves a narrow problem."</p>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num sam">Slide 16</span>
+    <span class="timing">~11:40</span>
+  </div>
+  <div class="change-tag"><strong>SHARPENED v5:</strong> Now names Devin, Copilot, Cursor by name. References Goldman Sachs deploying Devin (peer bank — audience will know this). Frames Smart SDLC as the layer that makes AI coding tools SAFE, not a competitor to them. This is the most important competitive positioning in the talk.</div>
+  <div class="speaker sam">SAMBIT</div>
+  <div class="script">
+    <p>"And here is the uncomfortable truth about 2026.</p>
+    <p>We now have extraordinary AI tools. Copilot has 15 million users. Cursor rewrites entire files in seconds. Devin — an autonomous AI engineer — is deployed at Goldman Sachs, merging thousands of pull requests. These tools are real. They are powerful. And they are accelerating code generation at a pace none of us predicted.</p>
+    <p>But here is what none of them do.</p>
+    <p>They don't know <em>why</em> your code exists. They don't know which business decision created a rule. They don't know which regulatory constraint shaped a threshold. They don't preserve the chain from strategy to architecture to code to evidence.</p>
+    <p>Jira tracks activity — not intent. Git tracks code — not rationale. CI/CD tracks pipelines — not readiness. And AI coding agents? They generate code — not understanding.</p>
+    <p><span class="key">Every AI tool on the market accelerates execution. None preserve coherence. The faster you generate code, the faster you accumulate context debt.</span></p>
+    <p>That is the gap. And that is precisely what Smart SDLC was built to fill — not to replace these tools, but to be the layer that makes them safe, governed, and coherent at enterprise scale."</p>
+  </div>
+  <div class="stage-note">⚡ This slide reframes the entire competitive landscape. You're not against Copilot/Devin — you're the layer that makes them enterprise-ready. The audience should leave this slide thinking "Oh — that's a different category."</div>
+  <div class="handoff">→ Hand to GOBIND</div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num gob">Slide 17</span>
+    <span class="timing">~12:30</span>
+  </div>
+  <div class="speaker gob">GOBIND</div>
+  <div class="script">
+    <p>"In Jurassic Park, Dennis Nedry wasn't the villain. He was the single point of context. He knew the shortcuts. He knew the overrides. He knew why certain things were wired the way they were. And when he was gone… the park didn't fail because it lacked code. <span class="key">It failed because it lacked shared understanding.</span>"</p>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num gob">Slide 18</span>
+    <span class="timing">~12:50</span>
+  </div>
+  <div class="speaker gob">GOBIND</div>
+  <div class="script">
+    <p>"In our world, the 'Nedry' isn't malicious. It's the engineer who built the original pricing engine. The architect who made a risk trade-off during COVID volatility. The VP who approved a client exception under pressure.</p>
+    <p>Three years later… They've rotated. They've moved teams. They've left the firm. But the code is still here.</p>
+    <p>A new initiative needs to modify a legacy rule. It looks simple. One condition. One threshold. But someone asks: 'Before we change it — does anyone remember why this logic exists?'</p>
+    <p><span class="key">Silence.</span></p>
+    <span class="pause">Actual pause. 2 seconds.</span>
+    <p>Someone says, 'I think it was added after a client escalation.' Another says, 'No, I think Risk required it.' Another says, 'Let's check old emails.'</p>
+    <p>And suddenly… <span class="key">a two-line change becomes a two-week alignment exercise.</span></p>
+    <p>And someone says: 'We shouldn't touch that module. Nedry built it. And he left in 2022.'</p>
+    <p>This isn't a talent problem. It's not poor documentation. It's architectural. <span class="key">We have built systems where context lives in people, not in the institution.</span>"</p>
+  </div>
+  <div class="interaction">
+    <div class="label">Interaction 3</div>
+    <div class="speaker gob">GOBIND</div>
+    <div class="script">
+      <p>"Raise your hand if you've ever looked at a piece of code and said: 'Let's not go there.' Not because it's wrong. But because it has… history."</p>
+      <span class="pause">Pause</span>
+      <p>"That invisible caution? <span class="key">That's context debt accumulating interest.</span>"</p>
+    </div>
+  </div>
+  <div class="handoff">→ Hand to NARAYANAN</div>
+</div>
+
+<!-- ============================== ACT 2 ============================== -->
+<div class="act">Act 2 — The Pivot (14:00 – 17:30)</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num nar">Slide 19</span>
+    <span class="timing">~14:00</span>
+  </div>
+  <div class="stage-note">⚡ THIS IS THE TURN. The audience has spent 14 minutes feeling the pain. Now you give them hope. Slow down.</div>
+  <div class="speaker nar">NARAYANAN</div>
+  <div class="script">
+    <p>"So if the problem is not talent… not effort… not tooling… what exactly is missing?</p>
+    <p><span class="key">We don't have an execution problem. We have a memory problem.</span></p>
+    <p>Our systems scale. Our infrastructure scales. Our headcount scales. But our shared understanding does not.</p>
+    <p>For years, the industry has told us to 'Shift Left.' Shift testing left. Shift security left. Shift compliance left. All good advice.</p>
+    <p>But none of that solves the Context Gap. Because <span class="key">the real thing we need to shift left… is intent.</span></p>
+    <p>Today, intent is captured late. Clarified late. Reconstructed late. Validated late. That's why we get: Late clarity. Late alignment. Late fixes. And late fixes are always expensive.</p>
+    <p>If we want to eliminate the Scale Tax, we must capture intent at the moment it is created. Not after design. Not during audit. Not during crisis. At inception.</p>
+    <p>This is the pivot: <span class="key">Shift memory left. Generate artefacts autonomously. Maintain connectivity continuously.</span>"</p>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num nar">Slide 20</span>
+    <span class="timing">~16:00</span>
+  </div>
+  <div class="speaker nar">NARAYANAN</div>
+  <div class="script">
+    <p>"So what happens if the SDLC itself becomes aware of intent?</p>
+    <p>What if strategy, architecture, code, testing, and operations were continuously connected — not by meetings, but by preserved meaning?</p>
+    <p><span class="key">Well — That is — Smart SDLC.</span>"</p>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num nar">Slide 21</span>
+    <span class="timing">~16:30</span>
+  </div>
+  <div class="speaker nar">NARAYANAN</div>
+  <div class="script">
+    <p>"Smart SDLC is the missing layer. Not another tool. Not another workflow. But a coherence engine that: captures intent early, generates artefacts autonomously, and maintains connectivity always.</p>
+    <p><span class="key">It is institutional memory designed into the delivery system.</span></p>
+    <p>So what does that look like in practice? How do you architect coherence?"</p>
+  </div>
+  <div class="handoff">→ Hand to GOBIND</div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num gob">Slide 22</span>
+    <span class="timing">~17:00</span>
+  </div>
+  <div class="speaker gob">GOBIND</div>
+  <div class="script">
+    <p>"Let's clarify something immediately. Smart SDLC is a delivery intelligence layer, a shared memory system, and a real-time intent connector.</p>
+    <p>It is NOT a replacement for talent. It is NOT a tool-chain replacement. It is NOT a governance bottleneck.</p>
+    <p>It amplifies decision-making. It reduces coordination overhead. And it automates compliance by preserving intent — not by adding process.</p>
+    <p><span class="key">Delivery requires a system that remembers… so your people don't have to.</span>"</p>
+  </div>
+  <div class="handoff">→ Hand to SAMBIT</div>
+</div>
+
+<!-- ============================== ACT 3 ============================== -->
+<div class="act">Act 3 — Watch It Work (17:30 – 24:00)</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num sam">Slide 23</span>
+    <span class="timing">~17:30</span>
+  </div>
+  <div class="speaker sam">SAMBIT</div>
+  <div class="script"><p>"It sits above your tools, connecting them. It is the connective tissue between Jira, Git, and the Cloud."</p></div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num sam">Slide 24</span>
+    <span class="timing">~17:45</span>
+  </div>
+  <div class="stage-note">⚡ THIS IS THE CENTREPIECE. Rehearse until it flows like a short film. The Nedry callback creates emotional continuity. The PM scenario shows scale. Together they prove this is an AI product that UNDERSTANDS, not just generates.</div>
+  <div class="speaker sam">SAMBIT</div>
+  <div class="script">
+    <p>"Let me make this real. Because the best way to understand Smart SDLC is to watch it think.</p>
+    <p>Remember that two-line code change that became a two-week alignment exercise? The one where Nedry built it and left in 2022?</p>
+    <p>Let's replay that — with Smart SDLC in place.</p>
+    <p>An engineer opens the module. Instead of silence, the system speaks. Right at their cursor, they see: 'This rule was created in Q3 2021 in response to a client escalation. It was approved by the VP of Risk. It has a regulatory dependency on cross-border settlement policy. Three downstream services depend on this threshold.'</p>
+    <p>Eight seconds. No Slack thread. No old emails. No meeting.</p>
+    <p>But Smart SDLC doesn't stop at answering questions. Let's go further.</p>
+    <p>A product manager types: 'We need to add multi-currency support to the payments service.'</p>
+    <p>The system reads the intent. It pulls the existing payments architecture. It retrieves the regulatory constraints for cross-border transactions. It finds the last three design decisions that touched this service — decisions made by people who may have already left the firm.</p>
+    <p>In seconds, it generates structured requirements — with acceptance criteria derived from actual compliance rules, not someone's memory. It produces an architecture recommendation that respects existing patterns and flags conflicts. It creates test scenarios before a single line of code is written.</p>
+    <p>The developer opens their IDE. The business intent, the architectural constraints, the regulatory guardrails, and the validation logic — all right there. They don't Slack anyone. They don't search Confluence. They build — with clarity.</p>
+    <p><span class="key">That is not a chatbot. That is an AI system that understands your organisation.</span>"</p>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num sam">Slide 25</span>
+    <span class="timing">~20:00</span>
+  </div>
+  <div class="speaker sam">SAMBIT</div>
+  <div class="script">
+    <p>"What you just saw happens because of four capabilities working together: the system retrieves your organisation's context before it writes anything — so outputs are compliant by default. Architecture decisions are recorded as living documents that evolve with the codebase. New projects get compliant scaffolding from day one. And validation logic is derived from intent before code is written — test-driven development at machine speed.</p>
+    <p><span class="key">This is not automation layered on top. It is intelligence embedded into the SDLC itself.</span>"</p>
+  </div>
+  <div class="handoff">→ Hand to GOBIND</div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num gob">Slide 26</span>
+    <span class="timing">~20:45</span>
+  </div>
+  <div class="speaker gob">GOBIND</div>
+  <div class="script">
+    <p>"The real technical breakthrough is not generation. It's linkage.</p>
+    <p>Today, our artefacts live in separate systems. Weakly connected by convention. In Smart SDLC, every artefact becomes a node in a connected map — a delivery graph that links strategy to code to evidence.</p>
+    <p>Intent links to Definition. Definition links to Code. Code links to Evidence. Every connection is typed and meaningful.</p>
+    <p>When intent changes — for example, a policy update — the graph automatically traverses downstream. It flags impacted tests. Invalidates stale evidence. Surfaces drift before it becomes a production incident.</p>
+    <p>Think of it this way: In Jurassic Park, when a fence goes down in one sector, the raptors don't politely stay in their zone. The impact cascades. Our delivery systems have the same problem. <span class="key">Smart SDLC is the system that sees the cascade before it happens.</span></p>
+    <p>Nothing floats. Nothing is lost."</p>
+  </div>
+  <div class="handoff">→ Hand to NARAYANAN</div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num nar">Slide 27</span>
+    <span class="timing">~21:45</span>
+  </div>
+  <div class="speaker nar">NARAYANAN</div>
+  <div class="script"><p>"If the initiative is a T-Rex, and the habitat is low-voltage fencing, the system flags the mismatch before we build. <span class="key">Intent-aware impact analysis. Before execution.</span>"</p></div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num sam">Slide 28</span>
+    <span class="timing">~22:00</span>
+  </div>
+  <div class="speaker sam">SAMBIT</div>
+  <div class="script">
+    <p>"This creates a closed-loop delivery system. Capture Intent. Generate Artefacts. Build With Context. Verify Against Intent. Gate With Evidence. Feed Runtime Signals Back.</p>
+    <p>Notice something. Verification is not against the code. <span class="key">It is against the original intent.</span>"</p>
+    <span class="pause">Pause</span>
+    <p>"And runtime signals feed back into the graph. So future decisions are context-aware. Traditional SDLC is linear. <span class="key">Smart SDLC is a self-correcting system.</span>"</p>
+  </div>
+  <div class="handoff">→ Hand to NARAYANAN</div>
+</div>
+
+<!-- ============================== ACT 4 ============================== -->
+<div class="act">Act 4 — Every Role, Transformed (24:00 – 29:00)</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num nar">Slide 29</span>
+    <span class="timing">~23:00</span>
+  </div>
+  <div class="speaker nar">NARAYANAN</div>
+  <div class="script"><p>"As the scope expands, the risk increases. The predators multiply. Now let me show you what changes for each role — because coherence is not abstract. It reshapes how every person in your organisation experiences delivery."</p></div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num nar">Slides 30–32</span>
+    <span class="timing">~23:15</span>
+  </div>
+  <div class="speaker nar">NARAYANAN</div>
+  <div class="script">
+    <p>"Product today is forced into orchestration through spreadsheets. Multiple Jira boards. Cross-team dependencies. Silent blockers. You don't manage work. You manage uncertainty.</p>
+    <p>Smart SDLC changes that. It creates a single Intent Graph — a living map where every initiative, story, dependency, and risk are connected nodes. When you prioritize a story, the system surfaces hidden dependencies, identifies critical path risk, and simulates the impact of re-sequencing.</p>
+    <p>You move from asking: 'What's the status?' to asking: '<span class="key">What is the optimal sequence to achieve the outcome?</span>'</p>
+    <p>Leadership does not need more dashboards. Leadership needs signal. Smart SDLC provides it. You can click on an initiative and see — live — the chain from Strategy to Epics to Code to Test Coverage to Deployment Evidence to Runtime Signals. It impacts every zone: Quality, Delivery, Metrics, Product — a holistic lift.</p>
+    <p>If a regulator asks: 'Why does this rule exist?' You do not launch an audit. You traverse the graph. The answer is seconds away, not weeks.</p>
+    <p><span class="key">This is governance by architecture, not by committee.</span></p>
+    <p>And you get alerts before the deadline is missed. The system predicts the delay based on graph activity — not someone's opinion in a status meeting."</p>
+  </div>
+  <div class="handoff">→ Hand to GOBIND</div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num gob">Slide 33</span>
+    <span class="timing">~25:30</span>
+  </div>
+  <div class="speaker gob">GOBIND</div>
+  <div class="script">
+    <p>"Today architecture is a PDF. It is read once. Then slowly violated.</p>
+    <p>Smart SDLC turns architecture into a living system. When requirements are captured, Architecture Decision Records are generated automatically — capturing not just the 'what' but the 'why.' When code is written, drift is detected. When patterns are broken, alerts trigger.</p>
+    <p>Architecture becomes queryable, enforceable, and measurable.</p>
+    <p><span class="key">In Jurassic Park terms — the fences don't just hold. They report. They adapt. And they never forget which dinosaur they were built to contain.</span>"</p>
+  </div>
+  <div class="handoff">→ Hand to SAMBIT</div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num sam">Slides 34–35</span>
+    <span class="timing">~26:15</span>
+  </div>
+  <div class="speaker sam">SAMBIT</div>
+  <div class="script">
+    <p>"Developers. Look at the tooltip on the screen. I am writing code for move_herbivores(). The system pushes the 'Dinosaur Intent' right to my cursor. I don't have to leave my IDE to check Confluence. <span class="key">The context finds me.</span></p>
+    <p>Developers today spend cognitive energy reconstructing context. Why was this added? What constraint applies? What policy governs this logic? Smart SDLC eliminates archaeology.</p>
+    <p>Inside the IDE: Intent surfaces contextually. Design rationale appears inline. Regulatory constraints are retrieved automatically. Tests are generated from business logic before implementation.</p>
+    <p>This reduces rework, Slack clarifications, misaligned implementations, and late-cycle surprises. Engineering velocity improves not because developers move faster — <span class="key">but because they move with clarity.</span>"</p>
+  </div>
+  <div class="handoff">→ Hand to GOBIND</div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num gob">Slide 36</span>
+    <span class="timing">~27:15</span>
+  </div>
+  <div class="speaker gob">GOBIND</div>
+  <div class="script">
+    <p>"When production fails, today we see: Logs. Metrics. Stack traces. But not the design assumption that caused the failure.</p>
+    <p>Smart SDLC links runtime incidents back to the originating intent, the architectural decision, the test coverage gap, and the specific trade-off made.</p>
+    <p>Root Cause Analysis becomes graph traversal — instead of a three-day investigation, you navigate the chain of reasoning that led to this code.</p>
+    <p><span class="key">Mean Time to Resolution drops because you are not debugging symptoms. You are navigating structural history.</span>"</p>
+  </div>
+  <div class="interaction">
+    <div class="label">Interaction 4 — The Skeptic's Question</div>
+    <div class="speaker gob">GOBIND</div>
+    <div class="script">
+      <p>"Now — I know what some of you are thinking. This sounds powerful. But can it actually work at enterprise scale? Can AI be trusted inside a governed delivery pipeline?"</p>
+      <span class="pause">Pause</span>
+      <p>"Fair question. Let me show you exactly how we built that trust."</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== ACT 5 ============================== -->
+<div class="act">Act 5 — The Engine, The Roadmap, The Payoff (29:00 – 35:00)</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num gob">Slide 37</span>
+    <span class="timing">~29:00</span>
+  </div>
+  <div class="speaker gob">GOBIND</div>
+  <div class="script">
+    <p>"This slide shows the engine underneath Smart SDLC. Think of it as a very intelligent, very disciplined factory floor — where humans give instructions at one end, and governed, high-quality outputs come out the other.</p>
+    <p>Five layers:</p>
+    <p>Experience Layer — the front door. Chat, APIs, file uploads. No training required.</p>
+    <p>Control Layer — the orchestrator. It decides which AI agents run, in what order, and when to pause for human judgment.</p>
+    <p>Intelligence Layer — the brain. AI that reasons over your delivery graph — your decisions, your patterns, your rules — not generic internet knowledge.</p>
+    <p>Knowledge Layer — the memory. It holds relationships between your requirements, decisions, teams, and artefacts. Intelligent search that finds meaning, not keywords.</p>
+    <p>Platform &amp; Governance Layer — the foundation. Every decision logged with a full audit trail. Every output traceable to its input.</p>
+    <p>In practice: a human interacts naturally, the orchestrator fires the right AI agents pulling live context from your graph, and every output is persisted with full lineage — an auditable record.</p>
+    <p>And here is the principle that governs everything: <span class="key">the Governance Lock.</span></p>
+    <p>The AI reasons. The agents execute within their boundaries. But before any output crosses a system boundary — before a ticket is created, a document is published, a pipeline is triggered — it passes through a human approval gate.</p>
+    <p><span class="key">Intelligence is AI-driven. Authority is always Human.</span> That is the Governance Lock — and it is an exoskeleton for talent, not a replacement."</p>
+  </div>
+  <div class="handoff">→ Hand to SAMBIT</div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num sam">Slide 38</span>
+    <span class="timing">~31:00</span>
+  </div>
+  <div class="change-tag"><strong>CHANGED v5:</strong> Vendor-neutral. Removed "Amazon Bedrock." Added model-agnostic + "works alongside" framing for Copilot/Devin compatibility. Reinforces "different layer, not competing tool" positioning.</div>
+  <div class="speaker sam">SAMBIT</div>
+  <div class="script">
+    <p>"We are in Phase 1: Foundation. The graph is live. <span class="key">This is not a concept. This is running today.</span></p>
+    <p>Phase 2 is about Deep Dependency Intelligence — predicting the impact of a change across the entire enterprise before you make it.</p>
+    <p>Phase 1 is where we stand today: 'Connected Intelligence.' We have established a Unified Delivery Graph that links Strategy to Code. We support every persona — Director, Architect, PO, Developer — with a single source of truth. We have assisted workflows live today.</p>
+    <p>Phase 2 is our leap into 'Autonomous Engineering.' This is the shift from Assistant to Agent. We are integrating enterprise-grade foundation models — model-agnostic by design — so Smart SDLC works alongside whatever coding tools your teams already use. Copilot generates the code. Smart SDLC ensures the code has context, governance, and lineage.</p>
+    <p>Instead of a developer asking, 'How do I fix this?', a background agent detects a vulnerability, selects the best reasoning model for the task, generates a fix, validates it against our governance rules, and simply asks the human to 'Approve.'</p>
+    <p><span class="key">Phase 2 isn't about finding information; it's about delegating work.</span>"</p>
+  </div>
+  <div class="handoff">→ Hand to NARAYANAN</div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num nar">Slide 39</span>
+    <span class="timing">~32:30</span>
+  </div>
+  <div class="change-tag"><strong>CHANGED v5:</strong> Added ROI attribution ("Phase 1 deployment benchmarks + industry baselines"). Removed two bottom metrics to tighten for time. Kept the four strongest.</div>
+  <div class="speaker nar">NARAYANAN</div>
+  <div class="script">
+    <p>"Does this pay off? Let me give you four numbers — drawn from our Phase 1 deployment benchmarks and validated against industry baselines.</p>
+    <p>25 to 35 percent reduction in rework — because validation is derived from intent, not reconstructed from memory.</p>
+    <p>40 to 70 percent faster onboarding — because institutional memory becomes queryable, not tribal.</p>
+    <p>20 to 30 percent drop in coordination cost — fewer sync meetings, fewer escalation loops, fewer manual dependency maps.</p>
+    <p>And 15 to 25 percent improvement in cycle predictability — because the graph knows your dependencies before you do.</p>
+    <p><span class="key">But here is what matters more than the numbers.</span></p>
+    <p>Leadership shifts from asking 'Is it on track?' to seeing Intent, Execution, Evidence, and Runtime health — live.</p>
+    <p>Engineering shifts from reconstructing context to constructing systems. Cognitive energy moves from archaeology to architecture.</p>
+    <p>And the organization shifts from hero culture — where delivery depends on the one architect who remembers, the VP who approved a trade-off, the engineer who built the core engine — to institutional memory that survives attrition.</p>
+    <p><span class="key">Coherence does not just make teams faster. It makes complexity compound in your favour.</span>"</p>
+  </div>
+  <div class="interaction">
+    <div class="label">Final Interaction</div>
+    <div class="speaker nar">NARAYANAN</div>
+    <div class="script">
+      <p>"If you could pick one lever this year: Reducing Rework or Moving Faster, which would you choose?</p>
+      <span class="pause">Pause. Let them think. 2 full seconds.</span>
+      <p>Actually — do not answer. <span class="key">Because Coherence gives you both.</span>"</p>
+    </div>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="slide-num all">Slide 40 — Call to Action</span>
+    <span class="timing">~35:00</span>
+  </div>
+  <div class="change-tag"><strong>CHANGED v5:</strong> CTA upgraded. QR code gives the entire room (500 people) a next step — not just the 3 who visit the booth. Three-tier ask: self-assessment + one-pager + pilot request.</div>
+  <div class="speaker nar">NARAYANAN</div>
+  <div class="script"><p>"The park is open."</p></div>
+  <div class="speaker gob">GOBIND</div>
+  <div class="script"><p>"Scan the QR code on screen. It takes you to a 2-minute self-assessment: 'What's your SDLC Age?' — find out whether your delivery model is Jurassic, Industrial, Modern, or Autonomous-Ready. You'll also get our architecture one-pager and a link to request a pilot."</p></div>
+  <div class="speaker sam">SAMBIT</div>
+  <div class="script"><p>"Or find us at the booth right after this session. Bring one use case. Ten minutes through the Delivery Graph. See the difference."</p></div>
+  <div class="speaker nar">NARAYANAN</div>
+  <div class="script"><p>"<span class="key">Let's stop paying the Scale Tax. Let's start architecting coherence.</span>"</p></div>
+  <div class="script"><p><strong>All: "Thank you."</strong></p></div>
+  <div class="stage-note">⚡ All three stand together. Make eye contact with the room. Hold for 3 seconds before stepping back.</div>
+</div>
+
+</body>
+</html>

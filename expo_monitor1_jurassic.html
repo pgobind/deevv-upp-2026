@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart SDLC — Jurassic Story</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg: #070a0e;
+  --surface: #0d1117;
+  --border: rgba(255,255,255,0.07);
+  --text: #eef2f7;
+  --dim: rgba(238,242,247,0.5);
+  --muted: rgba(238,242,247,0.22);
+  --green: #22c55e;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --blue: #3b82f6;
+  --purple: #a855f7;
+  --dino: #4ade80;
+}
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes scanline { 0% { top:-100%; } 100% { top:100%; } }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+@keyframes roar { 0%,100%{transform:scale(1) rotate(0deg)} 50%{transform:scale(1.08) rotate(-2deg)} }
+@keyframes stampede { 0%{transform:translateX(-120%)} 100%{transform:translateX(120vw)} }
+@keyframes ctaGlow { 0%,100%{box-shadow:0 0 20px rgba(74,222,128,0.1)} 50%{box-shadow:0 0 50px rgba(74,222,128,0.35)} }
+@keyframes ticker { 0%{transform:translateX(100vw)} 100%{transform:translateX(-100%)} }
+@keyframes crackle { 0%,100%{opacity:0.6} 50%{opacity:1} }
+@keyframes slideInBrand { from { opacity:0; transform:translateY(-30px); } to { opacity:1; transform:translateY(0); } }
+@keyframes pillFadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+html, body {
+  width:100vw; height:100vh;
+  overflow:hidden;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Space Grotesk', sans-serif;
+  cursor:pointer;
+}
+
+/* ── SCANLINE EFFECT ── */
+body::before {
+  content:'';
+  position:fixed; top:0; left:0; right:0;
+  height:2px;
+  background:linear-gradient(transparent, rgba(74,222,128,0.08), transparent);
+  animation:scanline 6s linear infinite;
+  z-index:999;
+  pointer-events:none;
+}
+
+/* ── GRID TEXTURE ── */
+body::after {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(74,222,128,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74,222,128,0.015) 1px, transparent 1px);
+  background-size:60px 60px;
+  z-index:0;
+  pointer-events:none;
+}
+
+/* ── PROGRESS BAR ── */
+.prog {
+  position:fixed; top:0; left:0; height:3px;
+  background:linear-gradient(90deg, var(--dino), var(--amber));
+  z-index:1000;
+  transition:width 0.3s linear;
+}
+
+/* ── HEADER ── */
+.hd {
+  position:fixed; top:0; left:0; right:0; height:64px;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 40px;
+  background:rgba(7,10,14,0.92);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(20px);
+  z-index:100;
+}
+.hd-logo {
+  display:flex; align-items:center; gap:12px;
+}
+.hd-mark {
+  width:34px; height:34px; border-radius:8px;
+  background:linear-gradient(135deg, var(--dino), #16a34a);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Space Mono', monospace;
+  font-weight:700; font-size:14px; color:#fff;
+}
+.hd-name {
+  font-family:'Bebas Neue', sans-serif;
+  font-size:24px; letter-spacing:2px; color:var(--text);
+}
+.hd-name span { color:var(--dino); }
+.hd-tag {
+  font-size:12px; color:var(--muted);
+  border-left:1px solid var(--border);
+  padding-left:14px; margin-left:14px;
+  font-family:'Space Mono', monospace;
+}
+.hd-right { display:flex; align-items:center; gap:10px; }
+.badge {
+  padding:5px 12px; border-radius:6px;
+  font-size:11px; font-weight:600; letter-spacing:0.5px;
+  font-family:'Space Mono', monospace;
+}
+.badge-live {
+  background:rgba(34,197,94,0.1); color:var(--green);
+  border:1px solid rgba(34,197,94,0.25);
+}
+.badge-live::before {
+  content:''; display:inline-block;
+  width:5px; height:5px; border-radius:50%;
+  background:var(--green); margin-right:6px;
+  animation:pulse 1.8s ease-in-out infinite;
+}
+.badge-org {
+  background:rgba(59,130,246,0.08); color:var(--blue);
+  border:1px solid rgba(59,130,246,0.2);
+}
+
+/* ── FOOTER ── */
+.ft {
+  position:fixed; bottom:0; left:0; right:0; height:52px;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 40px;
+  background:rgba(7,10,14,0.92);
+  border-top:1px solid var(--border);
+  z-index:100;
+}
+.ft-team { font-size:12px; color:var(--muted); font-family:'Space Mono',monospace; }
+.ft-dots { display:flex; gap:5px; position:absolute; left:50%; transform:translateX(-50%); }
+.dot { width:6px; height:6px; border-radius:50%; background:var(--muted); transition:all 0.3s; }
+.dot.on { background:var(--dino); width:20px; border-radius:3px; }
+.ft-cta { font-size:12px; font-weight:600; color:var(--dino); font-family:'Space Mono',monospace; }
+
+/* ── TICKER ── */
+.ticker {
+  position:fixed; top:64px; left:0; right:0; height:32px;
+  background:rgba(74,222,128,0.06);
+  border-bottom:1px solid rgba(74,222,128,0.12);
+  display:flex; align-items:center;
+  overflow:hidden; z-index:99;
+}
+.ticker-inner {
+  display:flex; align-items:center; gap:48px;
+  white-space:nowrap;
+  font-family:'Space Mono',monospace;
+  font-size:11px; font-weight:700;
+  color:rgba(74,222,128,0.7);
+  letter-spacing:1.5px;
+  animation:ticker 28s linear infinite;
+}
+.ticker-sep { color:rgba(74,222,128,0.3); }
+
+/* ── SCENES ── */
+.scene {
+  position:absolute;
+  top:96px; left:0; right:0;
+  bottom:52px;
+  display:flex; align-items:center; justify-content:center;
+  padding:32px 64px;
+  opacity:0; z-index:1;
+  pointer-events:none;
+  transition:opacity 0.7s ease;
+}
+.scene.on {
+  opacity:1; z-index:2;
+  pointer-events:all;
+}
+
+/* ════════════════════════════════════
+   SCENE 0 — HERO HOOK
+════════════════════════════════════ */
+.s0-wrap {
+  display:flex; align-items:center; justify-content:space-between;
+  width:100%; max-width:1300px; gap:60px;
+}
+.s0-left { flex:1; }
+.s0-eye {
+  font-family:'Space Mono',monospace;
+  font-size:11px; font-weight:700;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--dino); margin-bottom:16px;
+  display:flex; align-items:center; gap:8px;
+}
+.s0-eye::before {
+  content:''; display:block;
+  width:28px; height:2px; background:var(--dino);
+}
+.s0-title {
+  font-family:'Bebas Neue', sans-serif;
+  font-size:110px; line-height:0.9;
+  letter-spacing:2px;
+  color:var(--text); margin-bottom:24px;
+}
+.s0-title .accent { color:var(--dino); display:block; }
+.s0-sub {
+  font-size:20px; color:var(--dim); line-height:1.55;
+  max-width:520px; margin-bottom:32px;
+}
+.s0-sub strong { color:var(--text); }
+.s0-cta {
+  display:inline-flex; align-items:center; gap:10px;
+  padding:14px 28px;
+  border:1.5px solid var(--dino); border-radius:8px;
+  font-size:14px; font-weight:700;
+  color:var(--dino); letter-spacing:1px; text-transform:uppercase;
+  animation:ctaGlow 2.5s ease-in-out infinite;
+  font-family:'Space Mono',monospace;
+}
+.s0-right {
+  width:420px; flex-shrink:0;
+  display:flex; flex-direction:column; gap:14px;
+}
+.s0-era {
+  background:var(--surface);
+  border:1px solid var(--border); border-radius:12px;
+  padding:16px 20px;
+  display:flex; align-items:center; gap:14px;
+  transition:border-color 0.3s;
+  position:relative; overflow:hidden;
+}
+.s0-era::before {
+  content:''; position:absolute;
+  left:0; top:0; bottom:0; width:3px;
+}
+.s0-era.e1::before { background:var(--muted); }
+.s0-era.e2::before { background:var(--amber); }
+.s0-era.e3::before { background:var(--red); }
+.s0-era.e4::before { background:var(--purple); }
+.s0-era.e5::before { background:var(--dino); }
+.s0-era-icon { font-size:28px; flex-shrink:0; }
+.s0-era-name { font-weight:700; font-size:14px; margin-bottom:2px; }
+.s0-era-sub { font-size:12px; color:var(--muted); font-family:'Space Mono',monospace; }
+.s0-era.e5 { background:rgba(74,222,128,0.06); border-color:rgba(74,222,128,0.2); }
+.s0-era.e5 .s0-era-name { color:var(--dino); }
+
+/* ════════════════════════════════════
+   SCENE 1 — ERA 1: DINOSAUR AGE
+════════════════════════════════════ */
+.era-wrap {
+  width:100%; max-width:1300px;
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:48px; align-items:center;
+}
+.era-left {}
+.era-num {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:180px; line-height:0.85;
+  color:rgba(255,255,255,0.04); letter-spacing:-5px;
+  position:absolute; top:-20px; left:-20px;
+  pointer-events:none; z-index:0;
+}
+.era-eyebrow {
+  font-family:'Space Mono',monospace;
+  font-size:10px; font-weight:700;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--muted); margin-bottom:10px;
+}
+.era-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:76px; line-height:0.9;
+  letter-spacing:1px; margin-bottom:6px;
+}
+.era-years {
+  font-family:'Space Mono',monospace;
+  font-size:13px; color:var(--muted); margin-bottom:20px;
+}
+.era-quote {
+  font-size:21px; font-weight:300; line-height:1.5;
+  color:var(--dim); font-style:italic;
+  border-left:3px solid; padding-left:20px;
+  margin-bottom:20px;
+}
+.era-quote em { font-style:normal; font-weight:700; color:var(--text); }
+.era-pills { display:flex; flex-wrap:wrap; gap:8px; }
+.era-pill {
+  font-size:12px; font-weight:600;
+  padding:5px 12px; border-radius:20px;
+  font-family:'Space Mono',monospace;
+}
+.era-right { display:flex; flex-direction:column; gap:12px; }
+.era-card {
+  background:var(--surface);
+  border:1px solid var(--border); border-radius:12px;
+  padding:18px 20px;
+  display:flex; gap:14px; align-items:flex-start;
+  position:relative; overflow:hidden;
+}
+.era-card-bar {
+  position:absolute; top:0; left:0; right:0; height:2px;
+}
+.era-card-icon { font-size:24px; flex-shrink:0; margin-top:2px; }
+.era-card-title { font-size:14px; font-weight:700; margin-bottom:3px; }
+.era-card-desc { font-size:13px; color:var(--dim); line-height:1.5; }
+
+/* ════════════════════════════════════
+   SCENE TEASER — ERA 5
+════════════════════════════════════ */
+.teaser-wrap {
+  width:100%; max-width:1100px;
+  text-align:center;
+  display:flex; flex-direction:column; align-items:center; gap:20px;
+}
+.teaser-eyebrow {
+  font-family:'Space Mono',monospace;
+  font-size:11px; font-weight:700;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--dino);
+}
+.teaser-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:120px; line-height:0.88; letter-spacing:2px;
+}
+.teaser-title .t1 { color:var(--text); display:block; }
+.teaser-title .t2 { color:var(--dino); display:block; }
+.teaser-sub {
+  font-size:22px; color:var(--dim); line-height:1.5; max-width:700px;
+}
+.teaser-sub em { color:var(--dino); font-style:normal; font-weight:700; }
+.teaser-pills { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:4px; }
+.teaser-pill {
+  background:rgba(74,222,128,0.07);
+  border:1px solid rgba(74,222,128,0.2);
+  border-radius:8px; padding:10px 20px;
+  font-size:14px; font-weight:600; color:var(--dino);
+}
+.teaser-pill span { color:var(--dim); font-weight:400; margin-left:4px; }
+.teaser-keynote {
+  display:inline-flex; align-items:center; gap:10px;
+  padding:14px 36px;
+  background:var(--dino); border-radius:8px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px; letter-spacing:3px;
+  color:#070a0e; margin-top:4px;
+  animation:ctaGlow 2.5s ease-in-out infinite;
+}
+
+/* ════════════════════════════════════
+   SCENE 0 — SMARTSDLC TEASER
+════════════════════════════════════ */
+.smartsdlc-teaser {
+  width:100%; max-width:1000px;
+  text-align:center;
+  display:flex; flex-direction:column; align-items:center; gap:28px;
+}
+.smartsdlc-brand {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:140px; line-height:0.85; letter-spacing:4px;
+  background:linear-gradient(135deg, var(--dino), var(--amber), var(--purple));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:8px;
+  animation:slideInBrand 1.2s ease-out;
+}
+.smartsdlc-tagline {
+  font-size:24px; color:var(--dim); line-height:1.6;
+  max-width:700px; margin-bottom:12px;
+  animation:fadeUp 1.4s ease-out 0.3s both;
+}
+.smartsdlc-pills {
+  display:flex; gap:12px; flex-wrap:wrap; justify-content:center;
+  margin-top:8px; margin-bottom:16px;
+}
+.smartsdlc-pill {
+  background:rgba(74,222,128,0.08);
+  border:1px solid rgba(74,222,128,0.25);
+  border-radius:20px; padding:8px 20px;
+  font-size:13px; font-weight:600; color:var(--dino);
+  font-family:'Space Mono',monospace;
+  animation:pillFadeIn 0.8s ease-out both;
+}
+.smartsdlc-pill:nth-child(1) { animation-delay:0.5s; }
+.smartsdlc-pill:nth-child(2) { animation-delay:0.7s; }
+.smartsdlc-pill:nth-child(3) { animation-delay:0.9s; }
+.smartsdlc-hook {
+  font-size:20px; color:var(--text); line-height:1.6;
+  font-weight:500; max-width:750px;
+  animation:fadeUp 1.6s ease-out 1.1s both;
+}
+.smartsdlc-hook em {
+  color:var(--amber); font-style:normal; font-weight:700;
+}
+
+/* ── GIF DEMO CAROUSEL ── */
+.gif-carousel {
+  position:relative;
+  width:100%; max-width:960px;
+  height:420px;
+  margin-top:8px;
+}
+.gif-slide {
+  position:absolute; top:0; left:0; right:0; bottom:0;
+  display:flex; flex-direction:column; align-items:center;
+  opacity:0;
+  animation:gifCycle 21s ease-in-out infinite;
+}
+.gif-slide:nth-child(1) { animation-delay:0s; }
+.gif-slide:nth-child(2) { animation-delay:7s; }
+.gif-slide:nth-child(3) { animation-delay:14s; }
+@keyframes gifCycle {
+  0%,2% { opacity:0; }
+  5%,30% { opacity:1; }
+  33%,100% { opacity:0; }
+}
+.gif-label {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:6px 18px; border-radius:20px;
+  font-size:13px; font-weight:600;
+  margin-bottom:10px;
+  letter-spacing:0.5px;
+}
+.gif-label-director { background:rgba(74,222,128,0.12); color:var(--dino); border:1px solid rgba(74,222,128,0.25); }
+.gif-label-po { background:rgba(59,130,246,0.12); color:var(--blue); border:1px solid rgba(59,130,246,0.25); }
+.gif-label-dev { background:rgba(168,85,247,0.12); color:var(--purple); border:1px solid rgba(168,85,247,0.25); }
+.gif-frame {
+  width:100%; max-width:920px; flex:1;
+  border-radius:12px;
+  border:1px solid var(--border);
+  overflow:hidden;
+  box-shadow:0 8px 40px rgba(0,0,0,0.5);
+}
+.gif-frame img {
+  width:100%; height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+  /* ── QR BOOTH SCENE ── */
+  .qr-wrap {
+    width:100%; max-width:1200px;
+    display:grid; grid-template-columns:1fr auto;
+    gap:80px; align-items:center;
+  }
+  .qr-heading {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:88px; line-height:0.88; letter-spacing:1px;
+    margin-bottom:20px;
+  }
+  .qr-heading span { color:var(--dino); display:block; }
+  .qr-sub {
+    font-size:20px; color:var(--dim); line-height:1.6;
+    margin-bottom:28px;
+  }
+  .qr-steps { display:flex; flex-direction:column; gap:12px; margin-bottom:28px; }
+  .qr-step {
+    display:flex; align-items:center; gap:14px;
+    font-size:16px; color:var(--dim);
+  }
+  .qr-step-num {
+    width:28px; height:28px; border-radius:50%;
+    background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.3);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Space Mono',monospace; font-size:12px; font-weight:700;
+    color:var(--dino); flex-shrink:0;
+  }
+  .qr-platform { display:flex; gap:10px; flex-wrap:wrap; }
+  .qr-plat-badge {
+    padding:6px 14px; border-radius:6px;
+    background:rgba(255,255,255,0.04); border:1px solid var(--border);
+    font-size:12px; font-weight:600; color:var(--muted);
+    font-family:'Space Mono',monospace;
+  }
+  .qr-right { display:flex; flex-direction:column; align-items:center; gap:14px; }
+  .qr-frame {
+    padding:20px; border-radius:16px;
+    background:#fff;
+    box-shadow: 0 0 0 1px rgba(74,222,128,0.3), 0 0 60px rgba(74,222,128,0.1);
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    animation:ctaGlow 2.5s ease-in-out infinite;
+  }
+  .qr-url {
+    font-family:'Space Mono',monospace; font-size:10px;
+    color:#333; letter-spacing:0.5px;
+  }
+  .qr-or { font-size:12px; color:var(--muted); font-family:'Space Mono',monospace; }
+  .qr-link {
+    font-family:'Space Mono',monospace; font-size:15px;
+    font-weight:700; color:var(--dino); letter-spacing:0.5px;
+  }
+
+</style>
+</head>
+<body>
+
+<canvas id="bgParticles" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
+
+<div class="prog" id="prog"></div>
+
+<header class="hd">
+  <div class="hd-logo">
+    <div class="hd-mark">S</div>
+    <div class="hd-name">Smart <span>SDLC</span></div>
+    <div class="hd-tag">A Jurassic Story</div>
+  </div>
+  <div class="hd-right">
+    <span class="badge badge-live">Phase 1 Live</span>
+    <span class="badge badge-org">JPMorganChase</span>
+  </div>
+</header>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner" id="tickerInner">
+    <span>🦖 SMART SDLC · DEVUP 2026</span><span class="ticker-sep">///</span>
+    <span>DELIVERIES AUTOMATION — PHASE 1 LIVE ✅</span><span class="ticker-sep">///</span>
+    <span>INTENT → EXECUTION · 8.2 SECONDS</span><span class="ticker-sep">///</span>
+    <span>5 ACTIVE ADRs · Q1→Q4 DELIVERY PLAN</span><span class="ticker-sep">///</span>
+    <span>🏆 TAKE THE QUIZ — SCAN QR CODE</span><span class="ticker-sep">///</span>
+    <span>FROM FOSSILS TO AUTONOMOUS SDLC</span><span class="ticker-sep">///</span>
+    <span>50,000+ INSTRUCTIONS · ALL CCPs GLOBAL</span><span class="ticker-sep">///</span>
+    <span>🦖 SMART SDLC · DEVUP 2026</span><span class="ticker-sep">///</span>
+    <span>DELIVERIES AUTOMATION — PHASE 1 LIVE ✅</span><span class="ticker-sep">///</span>
+    <span>INTENT → EXECUTION · 8.2 SECONDS</span><span class="ticker-sep">///</span>
+    <span>5 ACTIVE ADRs · Q1→Q4 DELIVERY PLAN</span><span class="ticker-sep">///</span>
+    <span>🏆 TAKE THE QUIZ — SCAN QR CODE</span><span class="ticker-sep">///</span>
+    <span>FROM FOSSILS TO AUTONOMOUS SDLC</span><span class="ticker-sep">///</span>
+    <span>50,000+ INSTRUCTIONS · ALL CCPs GLOBAL</span><span class="ticker-sep">///</span>
+  </div>
+</div>
+
+<!-- ══════════════ SCENE 1: HOOK ══════════════ -->
+<div class="scene on" id="s1">
+  <div class="s0-wrap">
+    <div class="s0-left">
+      <div class="s0-eye">DevUp · Cloud &amp; AI Summit 2026</div>
+      <h1 class="s0-title">
+        SDLC<br>
+        <span class="accent">WENT</span>
+        JURASSIC
+      </h1>
+      <p class="s0-sub">
+        <strong>5 eras. One evolution.</strong> From fossilised waterfall requirements to autonomous delivery. Smart SDLC is what happens when the fence finally <strong>remembers why it was built.</strong>
+      </p>
+      <div class="s0-cta">🦖 See the full story →</div>
+    </div>
+    <div class="s0-right">
+      <div class="s0-era e1">
+        <div class="s0-era-icon">🦕</div>
+        <div><div class="s0-era-name">Era 1: Waterfall</div><div class="s0-era-sub">1970s — Requirements Fossilized</div></div>
+      </div>
+      <div class="s0-era e2">
+        <div class="s0-era-icon">⚡</div>
+        <div><div class="s0-era-name">Era 2: Agile</div><div class="s0-era-sub">2001 — Faster, But Fragmented</div></div>
+      </div>
+      <div class="s0-era e3">
+        <div class="s0-era-icon">🔥</div>
+        <div><div class="s0-era-name">Era 3: DevOps</div><div class="s0-era-sub">2010 — Pipelines, No Context</div></div>
+      </div>
+      <div class="s0-era e4">
+        <div class="s0-era-icon">🤖</div>
+        <div><div class="s0-era-name">Era 4: AI Tools</div><div class="s0-era-sub">2022 — Still Fragmented</div></div>
+      </div>
+      <div class="s0-era e5">
+        <div class="s0-era-icon">🧠</div>
+        <div><div class="s0-era-name">Era 5: Autonomous SDLC</div><div class="s0-era-sub">2026 → Intent becomes execution</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SCENE 2: ERA 1 — WATERFALL ══════════════ -->
+<div class="scene" id="s2">
+  <div class="era-wrap">
+    <div class="era-left" style="position:relative;">
+      <div class="era-num" style="color:rgba(255,255,255,0.03);position:absolute;font-family:'Bebas Neue',sans-serif;font-size:200px;line-height:1;top:-30px;left:-10px;pointer-events:none;">01</div>
+      <div style="position:relative;z-index:1;">
+        <div class="era-eyebrow">Era 1 of 5</div>
+        <div class="era-title" style="color:#94a3b8;">🦕 WATERFALL</div>
+        <div class="era-years">1970s — 2000s</div>
+        <div class="era-quote" style="border-left-color:#64748b;">
+          "Requirements were <em>fossilized</em> before a single line of code was written.<br>Change was <em>extinction</em>."
+        </div>
+        <div class="era-pills">
+          <span class="era-pill" style="background:rgba(100,116,139,0.1);border:1px solid rgba(100,116,139,0.25);color:#94a3b8;">📋 400-page BRDs</span>
+          <span class="era-pill" style="background:rgba(100,116,139,0.1);border:1px solid rgba(100,116,139,0.25);color:#94a3b8;">🐌 18-month cycles</span>
+          <span class="era-pill" style="background:rgba(100,116,139,0.1);border:1px solid rgba(100,116,139,0.25);color:#94a3b8;">☠️ Change = CCB</span>
+        </div>
+      </div>
+    </div>
+    <div class="era-right">
+      <div class="era-card">
+        <div class="era-card-bar" style="background:#475569;"></div>
+        <div class="era-card-icon">📋</div>
+        <div><div class="era-card-title">Requirements Frozen at Day 1</div><div class="era-card-desc">By delivery day, the business had moved on. The software answered questions nobody was asking anymore.</div></div>
+      </div>
+      <div class="era-card">
+        <div class="era-card-bar" style="background:#475569;"></div>
+        <div class="era-card-icon">🪨</div>
+        <div><div class="era-card-title">Change Control Board</div><div class="era-card-desc">3 signatures. 6 weeks. For a field rename. The process outlasted the business case.</div></div>
+      </div>
+      <div class="era-card">
+        <div class="era-card-bar" style="background:#475569;"></div>
+        <div class="era-card-icon">🦴</div>
+        <div><div class="era-card-title">Fossil Record</div><div class="era-card-desc">The only thing that survived was the documentation. And nobody could read it 18 months later.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SCENE 3: ERA 2 — AGILE ══════════════ -->
+<div class="scene" id="s3">
+  <div class="era-wrap">
+    <div class="era-left" style="position:relative;">
+      <div style="position:relative;z-index:1;">
+        <div class="era-eyebrow">Era 2 of 5</div>
+        <div class="era-title" style="color:var(--amber);">⚡ AGILE</div>
+        <div class="era-years">2001 — 2015</div>
+        <div class="era-quote" style="border-left-color:var(--amber);">
+          "We got <em>faster</em> at building. We didn't get better at <em>remembering why</em>."
+        </div>
+        <div class="era-pills">
+          <span class="era-pill" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.22);color:var(--amber);">🔄 2-week sprints</span>
+          <span class="era-pill" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.22);color:var(--amber);">🛠️ Tool sprawl begins</span>
+          <span class="era-pill" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.22);color:var(--amber);">🧠 Intent still in heads</span>
+        </div>
+      </div>
+    </div>
+    <div class="era-right">
+      <div class="era-card">
+        <div class="era-card-bar" style="background:var(--amber);"></div>
+        <div class="era-card-icon">⚡</div>
+        <div><div class="era-card-title">Faster Feedback Loops</div><div class="era-card-desc">Sprints. Stand-ups. Retros. Working software finally shipped before the business forgot why they asked for it.</div></div>
+      </div>
+      <div class="era-card">
+        <div class="era-card-bar" style="background:var(--amber);"></div>
+        <div class="era-card-icon">🛠️</div>
+        <div><div class="era-card-title">Tool Island Syndrome Begins</div><div class="era-card-desc">Jira. Confluence. Rally. Trello. 3–5 tools to manage a single sprint. Each one tracking a different slice of truth.</div></div>
+      </div>
+      <div class="era-card">
+        <div class="era-card-bar" style="background:var(--amber);"></div>
+        <div class="era-card-icon">🧠</div>
+        <div><div class="era-card-title">Memory Still Human</div><div class="era-card-desc">Velocity doubled. But the "why" behind every ticket? Still locked in the scrum master's brain.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SCENE 4: ERA 3 — DEVOPS ══════════════ -->
+<div class="scene" id="s4">
+  <div class="era-wrap">
+    <div class="era-left" style="position:relative;">
+      <div style="position:relative;z-index:1;">
+        <div class="era-eyebrow">Era 3 of 5</div>
+        <div class="era-title" style="color:var(--red);">🔥 DEVOPS</div>
+        <div class="era-years">2010 — 2022</div>
+        <div class="era-quote" style="border-left-color:var(--red);">
+          "We automated the <em>mechanics</em> of delivery.<br>We forgot to automate the <em>meaning</em>."
+        </div>
+        <div class="era-pills">
+          <span class="era-pill" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.22);color:var(--red);">🚀 CI/CD pipelines</span>
+          <span class="era-pill" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.22);color:var(--red);">🗺️ Jira here. Confluence there.</span>
+          <span class="era-pill" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.22);color:var(--red);">📉 Coordination debt rises</span>
+        </div>
+      </div>
+    </div>
+    <div class="era-right">
+      <div class="era-card">
+        <div class="era-card-bar" style="background:var(--red);"></div>
+        <div class="era-card-icon">🚀</div>
+        <div><div class="era-card-title">Deploy on Merge</div><div class="era-card-desc">The pipeline ships in minutes. But it has zero idea what business outcome the code was supposed to serve.</div></div>
+      </div>
+      <div class="era-card">
+        <div class="era-card-bar" style="background:var(--red);"></div>
+        <div class="era-card-icon">🔀</div>
+        <div><div class="era-card-title">Disconnected Intent</div><div class="era-card-desc">Jira here. Confluence there. ServiceNow elsewhere. No single source of truth. Context fragmented across 7 tools.</div></div>
+      </div>
+      <div class="era-card">
+        <div class="era-card-bar" style="background:var(--red);"></div>
+        <div class="era-card-icon">📈</div>
+        <div><div class="era-card-title">Coordination Cost Explodes</div><div class="era-card-desc">More pipelines = more meetings. n(n-1)/2 communication paths. A team of 50 has 1,225 of them.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SCENE 5: ERA 4 — AI TOOLS ══════════════ -->
+<div class="scene" id="s5">
+  <div class="era-wrap">
+    <div class="era-left" style="position:relative;">
+      <div style="position:relative;z-index:1;">
+        <div class="era-eyebrow">Era 4 of 5</div>
+        <div class="era-title" style="color:var(--purple);">🤖 AI TOOLS</div>
+        <div class="era-years">2022 — 2025</div>
+        <div class="era-quote" style="border-left-color:var(--purple);">
+          "AI accelerates <em>execution</em>.<br>It doesn't fix the <em>fragmentation</em>."
+        </div>
+        <div class="era-pills">
+          <span class="era-pill" style="background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.22);color:var(--purple);">🤖 Copilots</span>
+          <span class="era-pill" style="background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.22);color:var(--purple);">💨 10× code output</span>
+          <span class="era-pill" style="background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.22);color:var(--purple);">🧩 Still no coherence</span>
+        </div>
+      </div>
+    </div>
+    <div class="era-right">
+      <div class="era-card">
+        <div class="era-card-bar" style="background:var(--purple);"></div>
+        <div class="era-card-icon">💨</div>
+        <div><div class="era-card-title">10× More Code, Same Confusion</div><div class="era-card-desc">GitHub Copilot. Cursor. Devin. More code shipped per engineer. But where does it all connect? Nobody knows.</div></div>
+      </div>
+      <div class="era-card">
+        <div class="era-card-bar" style="background:var(--purple);"></div>
+        <div class="era-card-icon">🗣️</div>
+        <div><div class="era-card-title">Faster Noise, Same Fragments</div><div class="era-card-desc">AI writes tickets, summaries, test plans. But the fragments are still disconnected. Context debt grows faster than ever.</div></div>
+      </div>
+      <div class="era-card">
+        <div class="era-card-bar" style="background:var(--purple);"></div>
+        <div class="era-card-icon">🧩</div>
+        <div><div class="era-card-title">The Missing Layer</div><div class="era-card-desc">None of these tools preserve <strong style="color:var(--text);">coherence</strong>. That's what's still missing. That's Era 5.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SCENE 6: ERA 5 — AUTONOMOUS SDLC (TEASER) ══════════════ -->
+<div class="scene" id="s6">
+  <div class="teaser-wrap">
+    <div class="teaser-eyebrow">🧠 Era 5 of 5 — This Is Happening Now · Deliveries Automation Is Live</div>
+    <div class="teaser-title">
+      <span class="t1">AUTONOMOUS</span>
+      <span class="t2">SDLC</span>
+    </div>
+    <p class="teaser-sub">
+      Where <em>intent becomes execution</em>. Not a concept — <em>in production</em>. Smart SDLC is running Deliveries Automation for Futures &amp; Options across all CCPs globally. Phase 1 is <em>live</em>.
+    </p>
+    <div class="teaser-pills">
+      <div class="teaser-pill">✅ Phase 1 Live <span>CCP Config · Balancing · Booking</span></div>
+      <div class="teaser-pill">📋 5 Active ADRs <span>All traceable to intent</span></div>
+      <div class="teaser-pill">🌍 Global <span>All CCPs · 50k+ instructions</span></div>
+      <div class="teaser-pill">⚡ 8.2s <span>Context retrieved vs 3-week audit</span></div>
+      <div class="teaser-pill">🤖 Scrum Co-Pilot <span>Autonomous sprint intelligence</span></div>
+      <div class="teaser-pill">🛡️ Governance Lock <span>AI-driven. Always human authority.</span></div>
+    </div>
+    <div class="teaser-keynote">🚀 See it live — Visit our Demo Station →</div>
+  </div>
+</div>
+
+<!-- ══════════════ SCENE 7: QR / BOOTH CTA ══════════════ -->
+<div class="scene" id="s7">
+  <div class="qr-wrap">
+    <div class="qr-left">
+      <div class="s0-eye" style="margin-bottom:16px;">🦖 Take the DevUp Challenge</div>
+      <div class="qr-heading">I Survived<br><span>Jurassic SDLC</span></div>
+      <p class="qr-sub">8 questions. 20 seconds each.<br>Test your <strong style="color:var(--dino)">AI Engineering</strong> knowledge in banking.</p>
+      <div class="qr-steps">
+        <div class="qr-step"><span class="qr-step-num">1</span> Scan the QR code with your phone</div>
+        <div class="qr-step"><span class="qr-step-num">2</span> Open in Chrome or Safari</div>
+        <div class="qr-step"><span class="qr-step-num">3</span> Answer 8 questions, get your rank</div>
+        <div class="qr-step"><span class="qr-step-num">4</span> Share your Scorecard at the booth 🏆</div>
+      </div>
+      <div class="qr-platform">
+        <span class="qr-plat-badge">🎮 Works in Chrome &amp; Safari</span>
+        <span class="qr-plat-badge">🏆 Instant Scorecard</span>
+        <span class="qr-plat-badge">🧠 Autonomous SDLC Rank</span>
+      </div>
+    </div>
+    <div class="qr-right">
+      <div class="qr-frame">
+        <div id="qrCanvas" style="width:240px;height:240px;"></div>
+        <div class="qr-url" id="qrUrlLabel">quiz_smartsdlc.html</div>
+      </div>
+      <div class="qr-or">OR open on this device:</div>
+      <div class="qr-link" id="qrLink">quiz_smartsdlc.html</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="ft">
+  <div class="ft-team">Narayanan · Gobind · Sambit — JPMorganChase Engineering Excellence</div>
+  <div class="ft-dots" id="ftDots"></div>
+  <div class="ft-cta"><span style="color:var(--muted);font-size:10px;margin-right:10px;">Click / → / ← to navigate</span> DevUp 2026 · Visit Our Booth →</div>
+</footer>
+
+<script>
+// ─── SCENE SYSTEM (auto + click to advance) ──────────────────
+const SCENES = document.querySelectorAll('.scene');
+const N = SCENES.length;
+let cur = 0;
+const DURATIONS = [9000, 9000, 9000, 9000, 9000, 9000, 9000]; // 7 scenes, 9s each
+let t0 = Date.now();
+let timer = null;
+
+// Build footer dots
+const dotsEl = document.getElementById('ftDots');
+for (let i = 0; i < N; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' on' : '');
+  d.addEventListener('click', (e) => { e.stopPropagation(); show(i); });
+  dotsEl.appendChild(d);
+}
+
+function show(idx) {
+  SCENES[cur].classList.remove('on');
+  cur = (idx + N) % N;
+  SCENES[cur].classList.add('on');
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('on', i === cur));
+  t0 = Date.now();
+  if (cur === N - 1) setTimeout(drawQR, 120);
+  scheduleNext();
+}
+
+function next() { show(cur + 1); }
+function prev() { show(cur - 1); }
+function scheduleNext() {
+  clearTimeout(timer);
+  const dur = DURATIONS[cur] || 9000;
+  timer = setTimeout(() => {
+    next();
+  }, dur);
+}
+scheduleNext();
+
+// Progress bar
+function tick() {
+  const dur = DURATIONS[cur] || 9000;
+  const pct = Math.min(100, ((Date.now() - t0) / dur) * 100);
+  document.getElementById('prog').style.width = pct + '%';
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+// Click anywhere to advance, right-click to go back
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.ft-dots') || e.target.closest('button') || e.target.closest('a')) return;
+  next();
+});
+document.addEventListener('contextmenu', (e) => { e.preventDefault(); prev(); });
+
+// Keyboard: arrow keys / space
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+});
+
+
+// ─── PARTICLE BACKGROUND ──────────────────────────────────────────────
+function initParticles() {
+  const canvas = document.getElementById('bgParticles');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const particles = [];
+  const particleCount = 40;
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.vx = (Math.random() - 0.5) * 0.5;
+      this.vy = (Math.random() - 0.5) * 0.5;
+      this.radius = Math.random() * 1.5 + 0.5;
+      this.opacity = Math.random() * 0.4 + 0.1;
+      this.color = ['rgba(74,222,128,', 'rgba(245,158,11,', 'rgba(168,85,247,'][Math.floor(Math.random() * 3)];
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+      if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      this.x = Math.max(0, Math.min(canvas.width, this.x));
+      this.y = Math.max(0, Math.min(canvas.height, this.y));
+    }
+    draw() {
+      ctx.fillStyle = this.color + this.opacity + ')';
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < particleCount; i++) {
+    particles.push(new Particle());
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.update();
+      p.draw();
+    });
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 150) {
+          ctx.strokeStyle = 'rgba(74,222,128,' + (0.05 * (1 - dist/150)) + ')';
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+}
+initParticles();
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  QUIZ URL — CHANGE THIS to your hosted quiz URL            ║
+// ║  Host quiz_smartsdlc.html on GitHub Pages / Netlify /      ║
+// ║  Replit and paste the full URL here.                       ║
+// ╚══════════════════════════════════════════════════════════════╝
+const QUIZ_URL = 'https://smart-sdlc-automate.replit.app/quiz';
+
+let qrDrawn = false;
+function drawQR() {
+  if (qrDrawn) return;
+  const container = document.getElementById('qrCanvas');
+  if (!container) return;
+
+  try {
+    new QRCode(container, {
+      text: QUIZ_URL,
+      width: 240,
+      height: 240,
+      colorDark: '#070a0e',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  } catch(e) {
+    container.innerHTML = '<div style="width:240px;height:240px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:8px;color:#333;font-size:14px;text-align:center;padding:20px;">QR loads when online.<br>Visit URL below.</div>';
+  }
+
+  const shortUrl = QUIZ_URL.replace('https://', '');
+  const el1 = document.getElementById('qrUrlLabel');
+  const el2 = document.getElementById('qrLink');
+  if (el1) el1.textContent = shortUrl;
+  if (el2) el2.textContent = shortUrl;
+  qrDrawn = true;
+}
+
+// Pre-generate QR on load so it's ready when scene arrives
+window.addEventListener('DOMContentLoaded', () => setTimeout(drawQR, 500));
+
+</script>
+</body>
+</html>

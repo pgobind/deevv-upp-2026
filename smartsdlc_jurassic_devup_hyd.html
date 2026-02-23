@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartSDLC — Jurassic SDLC · DevUp Hyderabad 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Syne+Mono&family=Bebas+Neue&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --devup-copper:#B8742A;--devup-gold:#C98A3E;--devup-bar:linear-gradient(135deg,#B8742A,#D4963C);
+  --purple:#7C3AED;--indigo:#4F46E5;--violet:#8B5CF6;--lilac:#A78BFA;
+  --grad:linear-gradient(135deg,#7C3AED,#4F46E5);
+  --dino:#4ade80;--dino2:#22c55e;
+  --c1:#64748B;--c2:#F59E0B;--c3:#EF4444;--c4:#06B6D4;
+  --bg:#070a0e;--ink:#0d1117;--card:#0f1820;--border:rgba(184,116,42,.12);
+  --text:#eef2f7;--dim:rgba(238,242,247,.5);--ghost:rgba(238,242,247,.22);--muted:rgba(238,242,247,.14);
+}
+*{-webkit-font-smoothing:antialiased}
+html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;cursor:none}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes scan{from{top:-80px}to{top:110%}}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes glitch{0%,88%,100%{transform:translate(0)}90%{transform:translate(-3px,1px);filter:hue-rotate(20deg)}93%{transform:translate(3px,-1px);filter:hue-rotate(-15deg)}96%{transform:translate(-2px,2px);filter:none}}
+@keyframes cglow{0%,100%{box-shadow:0 0 18px rgba(184,116,42,.2),0 0 50px rgba(184,116,42,.06)}50%{box-shadow:0 0 36px rgba(184,116,42,.5),0 0 90px rgba(184,116,42,.16)}}
+@keyframes dglow{0%,100%{box-shadow:0 0 20px rgba(74,222,128,.1),0 0 60px rgba(74,222,128,.04)}50%{box-shadow:0 0 50px rgba(74,222,128,.35),0 0 100px rgba(74,222,128,.1)}}
+@keyframes pglow{0%,100%{box-shadow:0 0 18px rgba(124,58,237,.2)}50%{box-shadow:0 0 40px rgba(124,58,237,.55)}}
+@keyframes orb{0%,100%{transform:translate(-50%,-50%) scale(1)}33%{transform:translate(-44%,-56%) scale(1.05)}66%{transform:translate(-56%,-44%) scale(.96)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes roar{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.06) rotate(-1.5deg)}}
+@keyframes stampede{0%{opacity:0;transform:translateX(-100px)}15%{opacity:1}85%{opacity:1}100%{opacity:0;transform:translateX(110vw)}}
+@keyframes boneFloat{0%,100%{transform:translateY(0) rotate(-12deg)}50%{transform:translateY(-10px) rotate(-8deg)}}
+@keyframes crackIn{from{letter-spacing:18px;opacity:0}to{letter-spacing:2px;opacity:1}}
+@keyframes lineGrow{from{width:0}to{width:100%}}
+@keyframes ripple{0%{transform:scale(.8);opacity:.8}100%{transform:scale(2.5);opacity:0}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes heroNum{from{opacity:0;transform:translateY(30px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes hexPulse{0%,100%{opacity:.06}50%{opacity:.14}}
+@keyframes lavaFlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+/* SCANLINE */
+body::before{content:'';position:fixed;left:0;right:0;height:80px;z-index:800;pointer-events:none;background:linear-gradient(transparent,rgba(74,222,128,.012),transparent);animation:scan 14s linear infinite;}
+body::after{content:'';position:fixed;inset:0;z-index:900;pointer-events:none;mix-blend-mode:overlay;opacity:.2;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");background-size:200px;}
+
+/* hex grid bg */
+.hex-bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='52'%3E%3Cpath d='M30 1 L56 15.5 L56 36.5 L30 51 L4 36.5 L4 15.5 Z' fill='none' stroke='rgba(74,222,128,0.03)' stroke-width='1'/%3E%3C/svg%3E");background-size:60px 52px;animation:hexPulse 8s ease-in-out infinite;}
+
+/* PROGRESS */
+#prog-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:750;}
+#prog{height:100%;width:0;transition:background .6s;}
+
+/* HEADER */
+.hd{position:fixed;top:0;left:0;right:0;z-index:600;display:flex;flex-direction:column;}
+.hd-stripe{height:26px;background:var(--devup-bar);display:flex;align-items:center;justify-content:space-between;padding:0 32px;box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 -1px 0 rgba(0,0,0,.3) inset;}
+.hd-stripe-l{display:flex;align-items:center;gap:12px;}
+.devup-mark{font-family:'Syne',sans-serif;font-weight:800;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.4);}
+.hd-stripe-sep{width:1px;height:12px;background:rgba(255,255,255,.25);}
+.hd-stripe-sub{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:1.5px;color:rgba(255,255,255,.75);text-transform:uppercase;}
+.hd-stripe-r{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:1.5px;color:rgba(255,255,255,.6);text-transform:uppercase;}
+.hd-main{height:44px;background:rgba(7,10,14,.96);border-bottom:1px solid rgba(74,222,128,.08);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:space-between;padding:0 32px;}
+.hd-brand{display:flex;align-items:center;gap:10px;}
+.hd-icon{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--dino2),#16a34a);display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(74,222,128,.4);}
+.hd-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;}
+.hd-name span{color:var(--dino);}
+.hd-sep{width:1px;height:14px;background:rgba(255,255,255,.08);margin:0 10px;}
+.hd-tag{font-family:'Syne Mono',monospace;font-size:9px;color:var(--ghost);letter-spacing:.8px;}
+.hd-r{display:flex;gap:6px;align-items:center;}
+.badge{padding:2px 9px;border-radius:4px;font-family:'Syne Mono',monospace;font-size:8.5px;letter-spacing:.8px;text-transform:uppercase;}
+.b-live{background:rgba(74,222,128,.08);color:var(--dino);border:1px solid rgba(74,222,128,.2);}
+.b-live::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--dino);margin-right:5px;animation:pulse 1.8s infinite;}
+.b-event{background:rgba(184,116,42,.12);color:#D4963C;border:1px solid rgba(184,116,42,.25);}
+
+/* TICKER */
+.ticker{position:fixed;top:70px;left:0;right:0;height:22px;z-index:590;background:rgba(74,222,128,.04);border-bottom:1px solid rgba(74,222,128,.08);overflow:hidden;display:flex;align-items:center;}
+.ticker-t{display:flex;white-space:nowrap;animation:ticker 60s linear infinite;}
+.ticker-t span{font-family:'Syne Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(74,222,128,.4);padding:0 18px;}
+.ticker-t .sep{color:rgba(74,222,128,.18);padding:0;}
+
+/* FOOTER */
+.ft{position:fixed;bottom:0;left:0;right:0;height:36px;z-index:600;background:rgba(7,10,14,.96);border-top:1px solid rgba(74,222,128,.07);display:flex;align-items:center;justify-content:space-between;padding:0 32px;}
+.ft-l{font-family:'Syne Mono',monospace;font-size:8.5px;color:rgba(255,255,255,.2);}
+.ft-dots{display:flex;gap:4px;position:absolute;left:50%;transform:translateX(-50%);}
+.dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.1);transition:all .35s;cursor:pointer;}
+.dot.on{background:var(--dino);width:14px;border-radius:2.5px;box-shadow:0 0 6px rgba(74,222,128,.5);}
+.ft-r{font-family:'Syne Mono',monospace;font-size:8.5px;color:rgba(255,255,255,.25);letter-spacing:.4px;}
+
+/* SCENE BASE */
+.scene{position:absolute;top:92px;left:0;right:0;bottom:36px;display:flex;align-items:center;justify-content:center;padding:16px 48px;opacity:0;pointer-events:none;z-index:1;transition:opacity .65s ease;}
+.scene.on{opacity:1;pointer-events:all;z-index:2;}
+.scene.on .r1{animation:up .5s ease both;}
+.scene.on .r2{animation:up .5s .09s ease both;}
+.scene.on .r3{animation:up .5s .18s ease both;}
+.scene.on .r4{animation:up .5s .28s ease both;}
+.scene.on .r5{animation:up .5s .38s ease both;}
+.scene.on .r6{animation:up .5s .48s ease both;}
+
+/* ══════════════════════════════════
+   S0 — HERO: ELECTRIC FRONT SLIDE
+══════════════════════════════════ */
+#s0{padding:0;overflow:hidden;background:radial-gradient(ellipse 80% 80% at 50% 50%,rgba(74,222,128,.04),transparent 60%);}
+.hero{width:100%;height:100%;display:grid;grid-template-columns:1fr 1fr;position:relative;}
+
+/* LEFT: BIG STATEMENT */
+.hero-l{display:flex;flex-direction:column;justify-content:center;padding:32px 44px 32px 52px;position:relative;border-right:1px solid rgba(74,222,128,.06);overflow:hidden;}
+.hero-l-ring{position:absolute;right:-240px;top:50%;transform:translateY(-50%);width:560px;height:560px;border-radius:50%;border:1px solid rgba(74,222,128,.04);animation:spin 90s linear infinite;pointer-events:none;}
+.hero-l-ring2{position:absolute;right:-180px;top:50%;transform:translateY(-50%);width:420px;height:420px;border-radius:50%;border:1px solid rgba(184,116,42,.04);animation:spin 60s linear infinite reverse;pointer-events:none;}
+
+.hero-eyebrow{font-family:'Syne Mono',monospace;font-size:9.5px;letter-spacing:3px;text-transform:uppercase;color:var(--dino);margin-bottom:22px;display:flex;align-items:center;gap:10px;}
+.hero-eyebrow::before{content:'';width:24px;height:1.5px;background:var(--dino);}
+
+.hero-h{font-family:'Bebas Neue',sans-serif;letter-spacing:1px;line-height:.88;margin-bottom:8px;font-size:clamp(52px,5.5vw,94px);}
+.hero-h .row1{display:block;color:rgba(238,242,247,.18);font-size:.45em;letter-spacing:4px;margin-bottom:4px;font-family:'Syne Mono',monospace;}
+.hero-h .row2{display:block;color:var(--text);}
+.hero-h .row3{display:block;color:var(--dino);animation:crackIn .9s .3s ease both;}
+.hero-h .row3 span{color:rgba(184,116,42,.9);}
+
+.hero-tagline{font-size:clamp(12px,1.35vw,16px);font-weight:300;color:var(--dim);line-height:1.72;max-width:460px;margin-bottom:24px;}
+.hero-tagline strong{color:var(--text);font-weight:600;}
+
+/* STAT TICKER ROW */
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid rgba(184,116,42,.15);border-radius:7px;overflow:hidden;margin-bottom:26px;}
+.hstat{padding:10px 12px;border-right:1px solid rgba(184,116,42,.1);background:rgba(184,116,42,.025);}
+.hstat:last-child{border-right:none;}
+.hstat-val{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:-.5px;background:var(--devup-bar);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1px;}
+.hstat-lbl{font-size:8.5px;color:var(--ghost);line-height:1.35;}
+
+.hero-cta{display:inline-flex;align-items:center;gap:9px;padding:12px 26px;border-radius:6px;border:1.5px solid var(--dino);font-family:'Syne Mono',monospace;font-size:12px;font-weight:700;color:var(--dino);letter-spacing:1px;text-transform:uppercase;animation:dglow 2.5s ease-in-out infinite;}
+
+/* RIGHT: ERA JOURNEY */
+.hero-r{display:flex;flex-direction:column;padding:20px 28px 20px 22px;background:rgba(0,0,0,.2);}
+.hero-r-label{font-family:'Syne Mono',monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:rgba(74,222,128,.35);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(74,222,128,.07);}
+.era-journey{display:flex;flex-direction:column;gap:5px;flex:1;}
+.ej{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:6px;background:var(--ink);border:1px solid var(--border);position:relative;overflow:hidden;flex:1;}
+.ej::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;}
+.ej1::before{background:var(--c1);}.ej2::before{background:var(--c2);}.ej3::before{background:var(--c3);}.ej4::before{background:var(--c4);}
+.ej5{background:rgba(74,222,128,.04);border-color:rgba(74,222,128,.18)!important;}
+.ej5::before{background:var(--dino);}
+.ej-ico{font-size:17px;flex-shrink:0;}
+.ej-name{font-size:11px;font-weight:600;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ej5 .ej-name{color:var(--dino);}
+.ej-era{font-family:'Syne Mono',monospace;font-size:7.5px;color:var(--ghost);}
+.ej-dino{font-family:'Syne Mono',monospace;font-size:7px;color:rgba(74,222,128,.4);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* DINO STAMPEDE (decorative) */
+.stampede{position:absolute;bottom:40px;left:0;right:0;pointer-events:none;z-index:0;overflow:hidden;height:36px;}
+.dino-run{position:absolute;bottom:4px;font-size:22px;animation:stampede 12s linear infinite;}
+.dino-run:nth-child(1){animation-delay:0s;}
+.dino-run:nth-child(2){animation-delay:4s;font-size:16px;bottom:10px;}
+.dino-run:nth-child(3){animation-delay:8s;font-size:26px;bottom:2px;}
+
+/* ══════════════════════════════════
+   ERA SCENES — SHARED
+══════════════════════════════════ */
+.era{width:100%;max-width:1260px;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;}
+.era-l{position:relative;min-width:0;}
+.era-ghost{font-family:'Bebas Neue',sans-serif;font-weight:800;font-size:160px;line-height:1;letter-spacing:-6px;position:absolute;top:-20px;left:-14px;color:rgba(255,255,255,.025);pointer-events:none;user-select:none;}
+.era-in{position:relative;z-index:1;}
+.era-ey{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--ghost);margin-bottom:7px;}
+.era-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(38px,4.2vw,60px);line-height:.9;margin-bottom:3px;}
+.era-dino-era{font-family:'Syne Mono',monospace;font-size:9px;color:rgba(74,222,128,.5);letter-spacing:1px;margin-bottom:3px;}
+.era-dates{font-family:'Syne Mono',monospace;font-size:9px;color:var(--ghost);letter-spacing:1px;margin-bottom:12px;}
+.era-pain{font-size:clamp(13px,1.4vw,17px);font-weight:700;line-height:1.4;padding:10px 13px;border-left:3px solid;border-radius:0 6px 6px 0;background:rgba(255,255,255,.02);margin-bottom:10px;}
+.era-context{font-size:11.5px;font-weight:300;color:var(--dim);line-height:1.65;margin-bottom:10px;}
+.era-context strong{color:var(--text);font-weight:600;}
+.era-context code{background:rgba(255,255,255,.06);padding:1px 5px;border-radius:3px;font-family:'Syne Mono',monospace;font-size:10px;}
+.era-pills{display:flex;flex-wrap:wrap;gap:4px;}
+.pill{font-family:'Syne Mono',monospace;font-size:7.5px;letter-spacing:.3px;padding:3px 8px;border-radius:3px;}
+
+.era-r{display:flex;flex-direction:column;gap:7px;min-width:0;}
+.illus{border-radius:9px;background:var(--card);border:1px solid rgba(255,255,255,.05);overflow:hidden;}
+.dis{border-radius:8px;padding:11px 13px;border:1px solid;}
+.dis-head{display:flex;align-items:center;gap:7px;margin-bottom:6px;flex-wrap:wrap;}
+.dis-badge{font-family:'Syne Mono',monospace;font-size:7.5px;letter-spacing:.8px;text-transform:uppercase;padding:2px 6px;border-radius:3px;white-space:nowrap;flex-shrink:0;}
+.dis-title{font-size:11.5px;font-weight:700;line-height:1.3;margin-bottom:4px;}
+.dis-desc{font-size:10px;font-weight:300;color:var(--dim);line-height:1.55;}
+.dis-stat{font-family:'Syne Mono',monospace;font-size:8px;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.05);}
+
+/* Dino parallel box */
+.dino-parallel{border-radius:8px;padding:10px 13px;border:1px solid rgba(74,222,128,.12);background:rgba(74,222,128,.03);display:flex;gap:10px;align-items:flex-start;}
+.dp-ico{font-size:22px;flex-shrink:0;}
+.dp-label{font-family:'Syne Mono',monospace;font-size:7.5px;letter-spacing:1px;text-transform:uppercase;color:rgba(74,222,128,.5);margin-bottom:3px;}
+.dp-title{font-size:11px;font-weight:700;color:var(--dino);margin-bottom:3px;}
+.dp-text{font-size:10px;color:var(--dim);line-height:1.5;}
+
+/* ERA PARADIGM — left column story block */
+.era-paradigm{background:rgba(255,255,255,.018);border:1px solid rgba(255,255,255,.05);border-radius:7px;padding:11px 14px;margin-bottom:10px;}
+.ep-label{font-family:'Syne Mono',monospace;font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.2);margin-bottom:8px;}
+.era-paradigm p{font-size:11px;font-weight:300;color:rgba(255,255,255,.45);line-height:1.65;margin-bottom:6px;}
+.era-paradigm p:last-child{margin-bottom:0;}
+.era-paradigm p strong{color:rgba(255,255,255,.8);font-weight:600;}
+
+/* CREATURE PORTRAIT frame */
+.creature-frame{border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,.06);position:relative;background:var(--card);}
+.creature-label{position:absolute;top:0;left:0;right:0;z-index:2;background:linear-gradient(to bottom,rgba(0,0,0,.7),transparent);padding:7px 12px;font-family:'Syne Mono',monospace;font-size:7.5px;letter-spacing:1.5px;color:rgba(255,255,255,.3);text-transform:uppercase;}
+
+/* creature bg tints */
+.t1-creature{box-shadow:0 0 0 1px rgba(71,85,105,.12);}
+.t2-creature{box-shadow:0 0 0 1px rgba(245,158,11,.08);}
+.t3-creature{box-shadow:0 0 0 1px rgba(239,68,68,.08);}
+.t4-creature{box-shadow:0 0 0 1px rgba(6,182,212,.08);}
+
+/* THEMES */
+.t1 .era-name{color:#94A3B8;}.t1 .era-pain{border-color:#475569;color:var(--text);}.t1 .era-pain em{color:#CBD5E1;font-style:normal;}
+.t1 .dis{background:rgba(71,85,105,.05);border-color:rgba(71,85,105,.16);}.t1 .dis-badge{background:rgba(71,85,105,.16);color:#94A3B8;}.t1 .dis-stat{color:#64748B;}
+.t1 .pill{background:rgba(71,85,105,.08);border:1px solid rgba(71,85,105,.18);color:#94A3B8;}
+.t2 .era-name{color:var(--c2);}.t2 .era-pain{border-color:var(--c2);}.t2 .era-pain em{color:var(--c2);font-style:normal;}
+.t2 .dis{background:rgba(245,158,11,.04);border-color:rgba(245,158,11,.15);}.t2 .dis-badge{background:rgba(245,158,11,.13);color:var(--c2);}.t2 .dis-stat{color:rgba(245,158,11,.5);}
+.t2 .pill{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.18);color:var(--c2);}
+.t3 .era-name{color:var(--c3);}.t3 .era-pain{border-color:var(--c3);}.t3 .era-pain em{color:var(--c3);font-style:normal;}
+.t3 .dis{background:rgba(239,68,68,.04);border-color:rgba(239,68,68,.15);}.t3 .dis-badge{background:rgba(239,68,68,.13);color:var(--c3);}.t3 .dis-stat{color:rgba(239,68,68,.5);}
+.t3 .pill{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);color:var(--c3);}
+.t4 .era-name{color:var(--c4);}.t4 .era-pain{border-color:var(--c4);}.t4 .era-pain em{color:var(--c4);font-style:normal;}
+.t4 .dis{background:rgba(6,182,212,.04);border-color:rgba(6,182,212,.15);}.t4 .dis-badge{background:rgba(6,182,212,.13);color:var(--c4);}.t4 .dis-stat{color:rgba(6,182,212,.5);}
+.t4 .pill{background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.18);color:var(--c4);}
+
+/* ══════════════════════════════════
+   S5 — ERA 5: SMART SDLC REVEAL
+══════════════════════════════════ */
+#s5{background:radial-gradient(ellipse 55% 65% at 18% 55%,rgba(74,222,128,.07),transparent),radial-gradient(ellipse 40% 50% at 82% 30%,rgba(184,116,42,.05),transparent);}
+.evo{width:100%;max-width:1260px;display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center;}
+.evo-ey{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--dino);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.evo-ey::before{content:'';width:18px;height:1px;background:var(--dino);}
+.evo-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,5.5vw,82px);line-height:.87;letter-spacing:1px;margin-bottom:10px;}
+.evo-h .e1{color:rgba(238,242,247,.12);display:block;font-size:.52em;letter-spacing:2px;font-family:'Syne Mono',monospace;}
+.evo-h .e2{background:linear-gradient(135deg,var(--dino),var(--devup-copper));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:block;}
+.evo-h .e3{color:var(--text);display:block;}
+.evo-q{font-size:clamp(12px,1.4vw,16px);font-weight:300;font-style:italic;color:var(--dim);line-height:1.6;padding:10px 13px;border-left:2px solid var(--dino);background:rgba(74,222,128,.03);border-radius:0 6px 6px 0;margin:12px 0 17px;}
+.evo-q strong{color:var(--text);font-weight:600;font-style:normal;}
+.evo-nums{display:flex;gap:0;margin-bottom:18px;border:1px solid rgba(74,222,128,.15);border-radius:7px;overflow:hidden;}
+.evo-num{flex:1;padding:11px 13px;text-align:center;border-right:1px solid rgba(74,222,128,.1);}
+.evo-num:last-child{border-right:none;}
+.evo-num-val{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:-1px;background:linear-gradient(135deg,var(--dino),var(--devup-copper));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.evo-num-label{font-size:8.5px;color:var(--ghost);margin-top:2px;line-height:1.4;}
+.evo-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:6px;background:linear-gradient(135deg,var(--dino2),#16a34a);font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:#050a04;animation:dglow 3s ease-in-out infinite;}
+.caps{display:flex;flex-direction:column;gap:7px;}
+.cap{display:flex;gap:10px;align-items:flex-start;background:var(--card);border:1px solid rgba(74,222,128,.1);border-radius:8px;padding:11px 13px;position:relative;overflow:hidden;}
+.cap::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--dino),var(--devup-copper));}
+.cap-ico{font-size:16px;flex-shrink:0;}
+.cap-title{font-size:11px;font-weight:600;margin-bottom:2px;}
+.cap-desc{font-size:10px;font-weight:300;color:var(--dim);line-height:1.5;}
+.cap-desc em{color:var(--dino);font-style:normal;font-weight:500;}
+
+/* ══════════════════════════════════
+   S6 — QR
+══════════════════════════════════ */
+#s6{background:radial-gradient(ellipse 50% 60% at 28% 50%,rgba(74,222,128,.05),transparent);}
+.qr{width:100%;max-width:1020px;display:grid;grid-template-columns:1fr auto;gap:60px;align-items:center;}
+.qr-ey{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--dino);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.qr-ey::before{content:'';width:18px;height:1px;background:var(--dino);}
+.qr-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,4.5vw,66px);line-height:.88;margin-bottom:10px;}
+.qr-h .qd{color:rgba(238,242,247,.2);display:block;font-size:.6em;}
+.qr-h .qp{color:var(--dino);display:block;}
+.qr-h .qt{color:var(--text);display:block;font-size:.7em;}
+.qr-sub{font-size:13px;font-weight:300;color:var(--dim);line-height:1.65;margin-bottom:16px;max-width:380px;}
+.qr-steps{display:flex;flex-direction:column;gap:7px;margin-bottom:15px;}
+.qr-step{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--dim);}
+.qr-n{width:20px;height:20px;border-radius:50%;flex-shrink:0;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.25);display:flex;align-items:center;justify-content:center;font-family:'Syne Mono',monospace;font-size:8.5px;font-weight:700;color:var(--dino);}
+.qr-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.qr-tag{padding:3px 8px;border-radius:4px;background:rgba(74,222,128,.05);border:1px solid rgba(74,222,128,.12);font-family:'Syne Mono',monospace;font-size:8.5px;color:rgba(74,222,128,.5);}
+.qr-box{display:flex;flex-direction:column;align-items:center;gap:9px;}
+.qr-frame{padding:12px;border-radius:10px;background:#fff;box-shadow:0 0 0 1px rgba(74,222,128,.4),0 0 36px rgba(74,222,128,.18);animation:dglow 3s ease-in-out infinite;}
+.qr-url-txt{font-family:'Syne Mono',monospace;font-size:8px;color:#555;text-align:center;margin-top:3px;}
+.qr-direct{font-family:'Syne Mono',monospace;font-size:11px;font-weight:700;color:var(--dino);}
+.qr-or{font-family:'Syne Mono',monospace;font-size:8.5px;color:var(--ghost);}
+</style>
+</head>
+<body>
+<div class="hex-bg"></div>
+<canvas id="bgParticles" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
+<div id="prog-bar"><div id="prog"></div></div>
+
+<!-- HEADER -->
+<header class="hd">
+  <div class="hd-stripe">
+    <div class="hd-stripe-l">
+      <div class="devup-mark">DEV UP</div>
+      <div class="hd-stripe-sep"></div>
+      <div class="hd-stripe-sub">Hyderabad &middot; 2026</div>
+    </div>
+    <div class="hd-stripe-r">Engineering Excellence</div>
+  </div>
+  <div class="hd-main">
+    <div class="hd-brand">
+      <div class="hd-icon">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M11.5 2L3.5 11h6.5l-1.5 7 8-10h-6.5l1-6z" fill="white"/></svg>
+      </div>
+      <div class="hd-name">Smart<span>SDLC</span></div>
+      <div class="hd-sep"></div>
+      <div class="hd-tag">A Jurassic Story &middot; From Fossils to Autonomous Delivery</div>
+    </div>
+    <div class="hd-r">
+      <span class="badge b-live">Pivoting Now</span>
+    </div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-t">
+    <span>🦖 SDLC WENT JURASSIC</span><span class="sep"> /// </span>
+    <span>5 ERAS · ONE EVOLUTION</span><span class="sep"> /// </span>
+    <span>COHERENCE IS THE MISSING LAYER</span><span class="sep"> /// </span>
+    <span>Y2K 1999 — $600B UNDOCUMENTED DECISION</span><span class="sep"> /// </span>
+    <span>LONDON WHALE 2012 — $6.2B SILOED CONTEXT</span><span class="sep"> /// </span>
+    <span>KNIGHT CAPITAL 2012 — $440M · 45 MINUTES · ONE ORPHANED FLAG</span><span class="sep"> /// </span>
+    <span>CROWDSTRIKE 2024 — 8.5M MACHINES · $10B · ZERO DRIFT DETECTION</span><span class="sep"> /// </span>
+    <span>🏆 TAKE THE QUIZ — SCAN QR CODE</span><span class="sep"> /// </span>
+    <span>FROM TRIASSIC WATERFALL TO AUTONOMOUS SDLC</span><span class="sep"> /// </span>
+    <span>INTENT → EXECUTION · COHERENCE BY DESIGN</span><span class="sep"> /// </span>
+    <span>🦖 SDLC WENT JURASSIC</span><span class="sep"> /// </span>
+    <span>5 ERAS · ONE EVOLUTION</span><span class="sep"> /// </span>
+    <span>COHERENCE IS THE MISSING LAYER</span><span class="sep"> /// </span>
+    <span>Y2K 1999 — $600B UNDOCUMENTED DECISION</span><span class="sep"> /// </span>
+    <span>LONDON WHALE 2012 — $6.2B SILOED CONTEXT</span><span class="sep"> /// </span>
+    <span>KNIGHT CAPITAL 2012 — $440M · 45 MINUTES · ONE ORPHANED FLAG</span><span class="sep"> /// </span>
+    <span>CROWDSTRIKE 2024 — 8.5M MACHINES · $10B · ZERO DRIFT DETECTION</span><span class="sep"> /// </span>
+    <span>🏆 TAKE THE QUIZ — SCAN QR CODE</span><span class="sep"> /// </span>
+    <span>FROM TRIASSIC WATERFALL TO AUTONOMOUS SDLC</span><span class="sep"> /// </span>
+    <span>INTENT → EXECUTION · COHERENCE BY DESIGN</span><span class="sep"> /// </span>
+  </div>
+</div>
+
+<!-- ══════════ S0: ELECTRIC HERO SLIDE ══════════ -->
+<div class="scene on" id="s0">
+  <div class="hero">
+    <!-- LEFT: BIG CLAIM -->
+    <div class="hero-l">
+      <div class="hero-l-ring"></div>
+      <div class="hero-l-ring2"></div>
+
+      <div class="hero-eyebrow r1">5 Eras · One Extinction Event · One Solution</div>
+
+      <h1 class="hero-h r2">
+        <span class="row1">// 5 eras. one extinction event.</span>
+        <span class="row2">SDLC WENT</span>
+        <span class="row3">JURASSIC<span>.</span></span>
+      </h1>
+
+      <p class="hero-tagline r3">
+        From <strong>fossilised waterfall BRDs</strong> to <strong>autonomous delivery</strong> —
+        the story of how engineering memory became the most expensive thing your org never built.
+        <strong>Smart SDLC fixed it.</strong>
+      </p>
+
+      <div class="hero-stats r4">
+        <div class="hstat">
+          <div class="hstat-val">$10B</div>
+          <div class="hstat-lbl">CrowdStrike 2024<br>zero drift detection</div>
+        </div>
+        <div class="hstat">
+          <div class="hstat-val">$600B</div>
+          <div class="hstat-lbl">Y2K 1999<br>undocumented decision</div>
+        </div>
+        <div class="hstat">
+          <div class="hstat-val">$440M</div>
+          <div class="hstat-lbl">Knight Capital 2012<br>orphaned flag · 45 mins</div>
+        </div>
+        <div class="hstat">
+          <div class="hstat-val">∞</div>
+          <div class="hstat-lbl">Context lost when<br>one person leaves</div>
+        </div>
+      </div>
+
+      <div class="hero-cta r5">🦖 Click to see the full story →</div>
+    </div>
+
+    <!-- RIGHT: ERA LIST -->
+    <div class="hero-r r2">
+      <div class="hero-r-label">The 5 Eras of SDLC Evolution</div>
+      <div class="era-journey">
+        <div class="ej ej1">
+          <div class="ej-ico">🦕</div>
+          <div>
+            <div class="ej-name">Era 1 — Waterfall</div>
+            <div class="ej-era">1970s &mdash; 2000s</div>
+            <div class="ej-dino">⟐ Triassic: slow giants, frozen in place</div>
+          </div>
+        </div>
+        <div class="ej ej2">
+          <div class="ej-ico">⚡</div>
+          <div>
+            <div class="ej-name">Era 2 — Agile</div>
+            <div class="ej-era">2001 &mdash; 2015</div>
+            <div class="ej-dino">⟐ Jurassic: faster predators, memory still in skulls</div>
+          </div>
+        </div>
+        <div class="ej ej3">
+          <div class="ej-ico">🔥</div>
+          <div>
+            <div class="ej-name">Era 3 — DevOps</div>
+            <div class="ej-era">2010 &mdash; 2022</div>
+            <div class="ej-dino">⟐ Cretaceous: peak velocity, no coherence</div>
+          </div>
+        </div>
+        <div class="ej ej4">
+          <div class="ej-ico">🤖</div>
+          <div>
+            <div class="ej-name">Era 4 — AI Tools</div>
+            <div class="ej-era">2022 &mdash; 2025</div>
+            <div class="ej-dino">⟐ K-Pg impact: acceleration without memory</div>
+          </div>
+        </div>
+        <div class="ej ej5">
+          <div class="ej-ico">🧠</div>
+          <div>
+            <div class="ej-name">Era 5 — Autonomous SDLC</div>
+            <div class="ej-era">2026 → Now</div>
+            <div class="ej-dino">⟐ Post-extinction: coherence survives. Intent remembered.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DINO STAMPEDE -->
+    <div class="stampede">
+      <div class="dino-run">🦕</div>
+      <div class="dino-run">🦖</div>
+      <div class="dino-run">🦕</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ S1: ERA 1 — WATERFALL ══════════ -->
+<div class="scene" id="s1">
+  <div class="era t1">
+    <div class="era-l">
+      <div class="era-ghost">01</div>
+      <div class="era-in">
+        <div class="era-ey r1">Era 1 of 5</div>
+        <div class="era-name r2">🦕 WATERFALL</div>
+        <div class="era-dino-era r2">⟐ The Triassic Period — 252–201 million years ago</div>
+        <div class="era-dates r2">1970s — 2000s</div>
+
+        <div class="era-paradigm r3">
+          <div class="ep-label">The Paradigm</div>
+          <p>Sequential, gate-controlled delivery. Every phase locked before the next began. Requirements written once, in full, before a single line of code. Authority lived in 400-page BRDs and Change Control Boards that took 6 weeks to approve a bug fix.</p>
+          <p>The hidden catastrophe: <strong>no one documented the "why."</strong> Decisions were made, then buried. The architect who understood the system was the system. When they retired — the knowledge retired with them.</p>
+        </div>
+
+        <div class="era-pills r4">
+          <span class="pill">🦴 400-page BRDs</span>
+          <span class="pill">🐌 18-month cycles</span>
+          <span class="pill">☠️ CCB: 3 sigs, 6 weeks</span>
+          <span class="pill">🪨 Context = 1 person</span>
+        </div>
+
+        <div class="era-pain r4">&ldquo;Your architect retired Friday. <em>Everything they knew died with their paper folder.</em>&rdquo;</div>
+      </div>
+    </div>
+
+    <div class="era-r">
+      <!-- CREATURE PORTRAIT: Plateosaurus / Prosauropod -->
+      <div class="creature-frame r2 t1-creature">
+        <div class="creature-label">Triassic · Prosauropod · ~230 Ma</div>
+        <svg width="100%" height="180" viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg">
+          <rect width="420" height="180" fill="#080f14"/>
+          <!-- ground -->
+          <line x1="0" y1="158" x2="420" y2="158" stroke="#1a2535" stroke-width="1"/>
+          <!-- distant mist layers -->
+          <ellipse cx="210" cy="158" rx="280" ry="18" fill="rgba(71,85,105,.12)"/>
+          <!-- body: large quadruped, long neck -->
+          <ellipse cx="190" cy="125" rx="62" ry="32" fill="#1e3a4a" stroke="#2d5068" stroke-width=".8"/>
+          <!-- neck -->
+          <path d="M220 100 Q248 72 260 48" stroke="#2d5068" stroke-width="18" stroke-linecap="round" fill="none"/>
+          <path d="M220 100 Q248 72 260 48" stroke="#1e3a4a" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <!-- head -->
+          <ellipse cx="265" cy="42" rx="18" ry="10" fill="#1e3a4a" stroke="#2d5068" stroke-width=".8"/>
+          <circle cx="272" cy="38" r="2.5" fill="#94A3B8" opacity=".6"/>
+          <!-- tail -->
+          <path d="M130 130 Q95 140 68 152" stroke="#2d5068" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <path d="M130 130 Q95 140 68 152" stroke="#1e3a4a" stroke-width="10" stroke-linecap="round" fill="none"/>
+          <!-- legs - 4 sturdy columns -->
+          <rect x="148" y="150" width="14" height="20" rx="3" fill="#1a2f3d"/>
+          <rect x="168" y="152" width="14" height="16" rx="3" fill="#1a2f3d"/>
+          <rect x="200" y="152" width="14" height="16" rx="3" fill="#1a2f3d"/>
+          <rect x="220" y="150" width="14" height="20" rx="3" fill="#1a2f3d"/>
+          <!-- fossils / bones in ground suggestion -->
+          <line x1="60" y1="162" x2="90" y2="162" stroke="#1a2535" stroke-width="2"/>
+          <line x1="340" y1="164" x2="380" y2="162" stroke="#1a2535" stroke-width="2"/>
+          <!-- frozen / icy texture overlay -->
+          <rect width="420" height="180" fill="rgba(71,85,105,.04)"/>
+          <!-- caption -->
+          <text x="16" y="174" font-family="monospace" font-size="7" fill="#334155">Enormous. Slow. Couldn't pivot when the climate changed.</text>
+          <text x="350" y="174" font-family="monospace" font-size="7" fill="#475569" text-anchor="end">~230 Ma</text>
+        </svg>
+      </div>
+
+      <!-- DISASTER CARD -->
+      <div class="dis r3">
+        <div class="dis-head">
+          <div class="dis-badge">⚠ Banking · 1999</div>
+          <div class="dis-title">Y2K — The $600B Undocumented Decision</div>
+        </div>
+        <div class="dis-desc">A 2-digit year chosen in 1960 with zero documentation of the reasoning. By 1999, every bank on earth paid to reverse-engineer 30-year-old intent. No "why." No author. Just a $600B excavation — more than the Apollo program — of a decision no one remembered making.</div>
+        <div class="dis-stat">$300–600B globally · Rationale: never recorded · Orphaned intent: 30 years · SmartSDLC preserves every "why" permanently</div>
+      </div>
+
+      <!-- DINO PARALLEL -->
+      <div class="dino-parallel r4">
+        <div class="dp-ico">🦕</div>
+        <div>
+          <div class="dp-label">Triassic · Extinction Mechanism</div>
+          <div class="dp-title">Too Rigid to Adapt When the World Changed</div>
+          <div class="dp-text">Prosauropods were the dominant life form of the Triassic. Enormous, successful — and completely unable to adapt when the climate shifted. They encoded their own extinction by being too specialised to change. Waterfall did the same: encoded decisions without context, then became fossils when the world moved on.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ S2: ERA 2 — AGILE ══════════ -->
+<div class="scene" id="s2">
+  <div class="era t2">
+    <div class="era-l">
+      <div class="era-ghost">02</div>
+      <div class="era-in">
+        <div class="era-ey r1">Era 2 of 5</div>
+        <div class="era-name r2">⚡ AGILE</div>
+        <div class="era-dino-era r2">⟐ The Jurassic Period — 201–145 million years ago</div>
+        <div class="era-dates r2">2001 — 2015</div>
+
+        <div class="era-paradigm r3">
+          <div class="ep-label">The Paradigm</div>
+          <p>A liberation from waterfall. 2-week sprints. Working software over documentation. People over process. Velocity became the god — and Agile delivered it. Teams moved fast, shipped often, and iterated relentlessly.</p>
+          <p>The hidden catastrophe: <strong>intent lived in people, not systems.</strong> Sprint 3's decision was in Sarah's head. By Sprint 14 Sarah was gone. Across teams, context was siloed. Risk grew in silence because nobody could see what their neighbour was building — or why.</p>
+        </div>
+
+        <div class="era-pills r4">
+          <span class="pill">🔄 2-week sprints</span>
+          <span class="pill">🧠 Intent = Sarah's brain</span>
+          <span class="pill">🛠️ Jira + 4 other tools</span>
+          <span class="pill">💸 Re-explanation tax every sprint</span>
+        </div>
+
+        <div class="era-pain r4">&ldquo;Sprint 14. Explaining the same decision from Sprint 3. <em>Sarah left. Context left with her.</em>&rdquo;</div>
+      </div>
+    </div>
+
+    <div class="era-r">
+      <!-- CREATURE PORTRAIT: T-Rex -->
+      <div class="creature-frame r2 t2-creature">
+        <div class="creature-label">Jurassic / Cretaceous · Tyrannosaurus · ~68 Ma</div>
+        <svg width="100%" height="180" viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg">
+          <rect width="420" height="180" fill="#0f1408"/>
+          <line x1="0" y1="158" x2="420" y2="158" stroke="#1a2010" stroke-width="1"/>
+          <ellipse cx="210" cy="158" rx="280" ry="14" fill="rgba(245,158,11,.04)"/>
+          <!-- massive body -->
+          <ellipse cx="200" cy="118" rx="68" ry="38" fill="#2a1f08" stroke="#4a3510" stroke-width=".8"/>
+          <!-- powerful back legs -->
+          <path d="M170 148 Q162 155 155 168" stroke="#4a3510" stroke-width="16" stroke-linecap="round" fill="none"/>
+          <path d="M170 148 Q162 155 155 168" stroke="#2a1f08" stroke-width="11" stroke-linecap="round" fill="none"/>
+          <path d="M220 150 Q228 158 238 168" stroke="#4a3510" stroke-width="16" stroke-linecap="round" fill="none"/>
+          <path d="M220 150 Q228 158 238 168" stroke="#2a1f08" stroke-width="11" stroke-linecap="round" fill="none"/>
+          <!-- tiny arms - the key visual metaphor -->
+          <path d="M250 108 Q260 112 262 118" stroke="#4a3510" stroke-width="5" stroke-linecap="round" fill="none"/>
+          <path d="M252 106 Q264 105 265 110" stroke="#4a3510" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <!-- neck and large head -->
+          <path d="M255 100 Q272 82 280 68" stroke="#4a3510" stroke-width="22" stroke-linecap="round" fill="none"/>
+          <path d="M255 100 Q272 82 280 68" stroke="#2a1f08" stroke-width="17" stroke-linecap="round" fill="none"/>
+          <!-- jaw -->
+          <path d="M275 65 Q295 60 305 66 Q295 75 275 72 Z" fill="#2a1f08" stroke="#4a3510" stroke-width=".8"/>
+          <path d="M275 65 Q295 60 305 66" stroke="#F59E0B" stroke-width=".5" opacity=".3"/>
+          <!-- eye -->
+          <circle cx="296" cy="62" r="3" fill="#F59E0B" opacity=".5"/>
+          <!-- tail counterbalance -->
+          <path d="M135 115 Q100 122 72 132" stroke="#4a3510" stroke-width="18" stroke-linecap="round" fill="none"/>
+          <path d="M135 115 Q100 122 72 132" stroke="#2a1f08" stroke-width="13" stroke-linecap="round" fill="none"/>
+          <!-- tiny arms annotation -->
+          <line x1="263" y1="112" x2="310" y2="98" stroke="rgba(245,158,11,.3)" stroke-width=".8" stroke-dasharray="2,2"/>
+          <text x="312" y="96" font-family="monospace" font-size="7" fill="rgba(245,158,11,.5)">tiny arms</text>
+          <text x="312" y="105" font-family="monospace" font-size="6.5" fill="rgba(245,158,11,.35)">can't reach across</text>
+          <text x="16" y="174" font-family="monospace" font-size="7" fill="#374151">Apex velocity. But it couldn't coordinate beyond its own reach.</text>
+        </svg>
+      </div>
+
+      <!-- DISASTER CARD -->
+      <div class="dis r3">
+        <div class="dis-head">
+          <div class="dis-badge" style="background:rgba(245,158,11,.13);color:#F59E0B;">⚠ JPMC · London · 2012</div>
+          <div class="dis-title">London Whale — $6.2B of Invisible Risk</div>
+        </div>
+        <div class="dis-desc">Bruno Iksil's derivatives positions grew to systemic scale across sprints with no cross-team visibility. Risk was accruing in one pocket; the other hand didn't know. Context lived in individuals and siloed dashboards. By the time it was visible, $6.2B was already gone. <strong>This happened here at JPMC.</strong></div>
+        <div class="dis-stat" style="color:rgba(245,158,11,.5);">$6.2B loss · Context siloed across teams · SmartSDLC links every decision to a cross-team rationale</div>
+      </div>
+
+      <!-- DINO PARALLEL -->
+      <div class="dino-parallel r4">
+        <div class="dp-ico">🦖</div>
+        <div>
+          <div class="dp-label">Jurassic · Coordination Failure</div>
+          <div class="dp-title">Apex Hunter. Tiny Arms. Couldn't Reach Across Itself.</div>
+          <div class="dp-text">T-Rex was the undisputed apex predator of velocity — fast, lethal, dominant. But those tiny arms meant it couldn't coordinate across its own body. Agile teams were the same: sprinting fast, unable to pass context beyond arm's reach. Every sprint was an island. Every departure was an extinction.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ S3: ERA 3 — DEVOPS ══════════ -->
+<div class="scene" id="s3">
+  <div class="era t3">
+    <div class="era-l">
+      <div class="era-ghost">03</div>
+      <div class="era-in">
+        <div class="era-ey r1">Era 3 of 5</div>
+        <div class="era-name r2">🔥 DEVOPS</div>
+        <div class="era-dino-era r2">⟐ The Cretaceous Period — 145–66 million years ago</div>
+        <div class="era-dates r2">2010 — 2022</div>
+
+        <div class="era-paradigm r3">
+          <div class="ep-label">The Paradigm</div>
+          <p>The golden age of engineering velocity. CI/CD pipelines. Deploy on merge. Infrastructure as code. Monitoring, observability, SLOs. Software delivery became an ecosystem of sophisticated, interlocking tools — each one a marvel of engineering.</p>
+          <p>The hidden catastrophe: <strong>the pipeline knew how to ship, but not why anything existed.</strong> Flags accumulated. Dead code lingered. Seven tools, each seeing one slice. No single system knew the full picture. Complexity was weaponised — but coherence was forgotten.</p>
+        </div>
+
+        <div class="era-pills r4">
+          <span class="pill">🚀 Deploy on merge</span>
+          <span class="pill">🗺️ 7 disconnected tools</span>
+          <span class="pill">☠️ Intent not in pipeline</span>
+          <span class="pill">📉 n(n-1)/2 comm paths</span>
+        </div>
+
+        <div class="era-pain r4">&ldquo;Deploy at 9:31am. <em>$440 million gone by 9:32am. Nobody knew which flag was live.</em>&rdquo;</div>
+      </div>
+    </div>
+
+    <div class="era-r">
+      <!-- CREATURE PORTRAIT: Spinosaurus / apex Cretaceous -->
+      <div class="creature-frame r2 t3-creature">
+        <div class="creature-label">Cretaceous · Spinosaurus · ~95 Ma</div>
+        <svg width="100%" height="180" viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg">
+          <rect width="420" height="180" fill="#130806"/>
+          <line x1="0" y1="158" x2="420" y2="158" stroke="#2a1210" stroke-width="1"/>
+          <!-- asteroid trajectory - the tension -->
+          <line x1="380" y1="8" x2="310" y2="52" stroke="rgba(239,68,68,.25)" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <circle cx="382" cy="6" r="5" fill="rgba(239,68,68,.3)" stroke="#EF4444" stroke-width=".8"/>
+          <text x="352" y="8" font-family="monospace" font-size="7" fill="rgba(239,68,68,.4)">incoming</text>
+          <!-- body -->
+          <ellipse cx="195" cy="120" rx="72" ry="34" fill="#2a1510" stroke="#4a2518" stroke-width=".8"/>
+          <!-- sail fin - the signature feature -->
+          <path d="M175 90 L182 42 M190 88 L196 30 M205 88 L210 26 M220 90 L224 36 M235 94 L237 48" stroke="#6b2d18" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M175 90 Q196 26 237 48 Q236 52 235 94 Q210 88 175 90 Z" fill="rgba(239,68,68,.08)" stroke="rgba(239,68,68,.2)" stroke-width=".8"/>
+          <!-- neck and head (longer, more crocodilian) -->
+          <path d="M255 105 Q278 88 295 72" stroke="#4a2518" stroke-width="18" stroke-linecap="round" fill="none"/>
+          <path d="M255 105 Q278 88 295 72" stroke="#2a1510" stroke-width="13" stroke-linecap="round" fill="none"/>
+          <path d="M292 70 Q315 62 328 70 Q315 80 292 78 Z" fill="#2a1510" stroke="#4a2518" stroke-width=".8"/>
+          <circle cx="315" cy="66" r="2.5" fill="#EF4444" opacity=".5"/>
+          <!-- tail -->
+          <path d="M128 118 Q90 128 62 142" stroke="#4a2518" stroke-width="15" stroke-linecap="round" fill="none"/>
+          <path d="M128 118 Q90 128 62 142" stroke="#2a1510" stroke-width="11" stroke-linecap="round" fill="none"/>
+          <!-- legs -->
+          <rect x="168" y="148" width="15" height="18" rx="3" fill="#22100c"/>
+          <rect x="210" y="148" width="15" height="18" rx="3" fill="#22100c"/>
+          <!-- ground fissure suggestion -->
+          <path d="M0 158 Q60 154 140 158 Q200 162 280 158 Q360 154 420 158" stroke="#2a1212" stroke-width="1" fill="none"/>
+          <text x="16" y="174" font-family="monospace" font-size="7" fill="#3a1818">Peak ecosystem. Peak complexity. One asteroid away from everything.</text>
+        </svg>
+      </div>
+
+      <!-- DISASTER CARD -->
+      <div class="dis r3">
+        <div class="dis-head">
+          <div class="dis-badge" style="background:rgba(239,68,68,.13);color:#EF4444;">☠️ Fatal · Knight Capital · 2012</div>
+          <div class="dis-title">$440M · 45 Minutes · One Orphaned Flag</div>
+        </div>
+        <div class="dis-desc"><code style="font-size:10px;background:rgba(239,68,68,.1);color:#EF4444;padding:1px 5px;border-radius:3px;">POWEREDBYFLAG</code> — dead code from 2003, nine years dormant, zero documentation. A new deployment accidentally reactivated it. The pipeline shipped it without question. No intent record. No drift detection. Knight Capital went bankrupt in 45 minutes.</div>
+        <div class="dis-stat" style="color:rgba(239,68,68,.5);">$440M in 45 min · Flag orphaned 9 years · Company destroyed · SmartSDLC flags every undocumented switch on day one</div>
+      </div>
+
+      <!-- DINO PARALLEL -->
+      <div class="dino-parallel r4">
+        <div class="dp-ico">🌋</div>
+        <div>
+          <div class="dp-label">Cretaceous · The Asteroid Problem</div>
+          <div class="dp-title">Perfect Ecosystem. Then One Event Nobody Modelled.</div>
+          <div class="dp-text">The Cretaceous was the most sophisticated dinosaur ecosystem ever — every niche filled, every pipeline optimised. It took one unexpected event to expose a systemic flaw: no resilience to the unanticipated. A 9-year-old flag is every engineering team's asteroid. DevOps solved deployment. It never solved coherence.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ S4: ERA 4 — AI TOOLS ══════════ -->
+<div class="scene" id="s4">
+  <div class="era t4">
+    <div class="era-l">
+      <div class="era-ghost">04</div>
+      <div class="era-in">
+        <div class="era-ey r1">Era 4 of 5</div>
+        <div class="era-name r2">🤖 AI TOOLS</div>
+        <div class="era-dino-era r2">⟐ The K-Pg Boundary — 66 million years ago</div>
+        <div class="era-dates r2">2022 — 2025</div>
+
+        <div class="era-paradigm r3">
+          <div class="ep-label">The Paradigm</div>
+          <p>The greatest acceleration in engineering history. Copilots, code generators, AI reviewers, AI planners. A 10× multiplier dropped into every stage of the pipeline simultaneously. Velocity that would have seemed like science fiction in 2015.</p>
+          <p>The hidden catastrophe: <strong>AI accelerated every fragment — but the seams between fragments were never coherent.</strong> 12 AI tools, each brilliant in isolation, none knowing why the system exists. Context debt compounds at 10× the speed. The gap between what ships and what was intended grows faster than any team can repair it.</p>
+        </div>
+
+        <div class="era-pills r4">
+          <span class="pill">💨 10× delivery velocity</span>
+          <span class="pill">🧩 No coherence layer</span>
+          <span class="pill">💀 Context debt compounds</span>
+          <span class="pill">🤖 12 AI tools, zero shared memory</span>
+        </div>
+
+        <div class="era-pain r4">&ldquo;You have 12 AI tools. Each accelerates a fragment. <em>None know why the system exists.</em>&rdquo;</div>
+      </div>
+    </div>
+
+    <div class="era-r">
+      <!-- CREATURE PORTRAIT: Asteroid impact / K-Pg boundary -->
+      <div class="creature-frame r2 t4-creature">
+        <div class="creature-label">K-Pg Boundary · Impact Event · 66 Ma</div>
+        <svg width="100%" height="180" viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="impactglow" cx="50%" cy="30%" r="55%">
+              <stop offset="0%" stop-color="rgba(6,182,212,.18)"/>
+              <stop offset="60%" stop-color="rgba(239,68,68,.06)"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+            <radialGradient id="firecore" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="rgba(239,68,68,.6)"/>
+              <stop offset="100%" stop-color="rgba(239,68,68,0)"/>
+            </radialGradient>
+          </defs>
+          <rect width="420" height="180" fill="#030812"/>
+          <rect width="420" height="180" fill="url(#impactglow)"/>
+          <!-- ground layer - charred landscape -->
+          <rect x="0" y="148" width="420" height="32" fill="#080c10"/>
+          <rect x="0" y="148" width="420" height="2" fill="#0d1a24"/>
+          <!-- stars visible (daytime apocalypse) -->
+          <circle cx="32" cy="18" r="1" fill="rgba(255,255,255,.3)"/>
+          <circle cx="88" cy="32" r=".8" fill="rgba(255,255,255,.25)"/>
+          <circle cx="155" cy="12" r="1.2" fill="rgba(255,255,255,.2)"/>
+          <circle cx="340" cy="24" r=".8" fill="rgba(255,255,255,.25)"/>
+          <circle cx="390" cy="14" r="1" fill="rgba(255,255,255,.3)"/>
+          <!-- asteroid trail -->
+          <line x1="370" y1="10" x2="245" y2="65" stroke="rgba(6,182,212,.5)" stroke-width="2" stroke-linecap="round"/>
+          <line x1="370" y1="10" x2="245" y2="65" stroke="rgba(255,255,255,.2)" stroke-width=".8"/>
+          <!-- asteroid body -->
+          <circle cx="247" cy="63" r="12" fill="rgba(6,182,212,.2)" stroke="rgba(6,182,212,.5)" stroke-width="1.5"/>
+          <circle cx="247" cy="63" r="7" fill="rgba(6,182,212,.4)"/>
+          <!-- impact shockwave rings -->
+          <ellipse cx="247" cy="148" rx="40" ry="8" fill="none" stroke="rgba(239,68,68,.35)" stroke-width="1" opacity=".9"/>
+          <ellipse cx="247" cy="148" rx="80" ry="14" fill="none" stroke="rgba(239,68,68,.2)" stroke-width="1" opacity=".7"/>
+          <ellipse cx="247" cy="148" rx="130" ry="20" fill="none" stroke="rgba(239,68,68,.1)" stroke-width="1" opacity=".5"/>
+          <!-- debris ejecta -->
+          <line x1="247" y1="100" x2="180" y2="135" stroke="rgba(239,68,68,.3)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="247" y1="100" x2="155" y2="120" stroke="rgba(239,68,68,.25)" stroke-width="1" stroke-linecap="round"/>
+          <line x1="247" y1="100" x2="310" y2="125" stroke="rgba(239,68,68,.3)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="247" y1="100" x2="340" y2="112" stroke="rgba(239,68,68,.2)" stroke-width="1" stroke-linecap="round"/>
+          <!-- silhouettes of thriving life... now ending -->
+          <path d="M30 148 Q38 130 50 148" fill="#0a0e14" stroke="#1a2535" stroke-width=".5"/>
+          <path d="M55 148 Q68 118 84 148" fill="#0a0e14" stroke="#1a2535" stroke-width=".5"/>
+          <!-- AI tools as thriving but unaware labels -->
+          <rect x="16" y="108" width="38" height="14" rx="2" fill="rgba(6,182,212,.08)" stroke="rgba(6,182,212,.2)" stroke-width=".8"/>
+          <text x="35" y="118" font-family="monospace" font-size="6" fill="rgba(6,182,212,.5)" text-anchor="middle">copilot</text>
+          <rect x="62" y="98" width="42" height="14" rx="2" fill="rgba(6,182,212,.08)" stroke="rgba(6,182,212,.2)" stroke-width=".8"/>
+          <text x="83" y="108" font-family="monospace" font-size="6" fill="rgba(6,182,212,.5)" text-anchor="middle">code-gen</text>
+          <rect x="330" y="105" width="38" height="14" rx="2" fill="rgba(6,182,212,.08)" stroke="rgba(6,182,212,.2)" stroke-width=".8"/>
+          <text x="349" y="115" font-family="monospace" font-size="6" fill="rgba(6,182,212,.5)" text-anchor="middle">reviewer</text>
+          <rect x="374" y="96" width="36" height="14" rx="2" fill="rgba(6,182,212,.08)" stroke="rgba(6,182,212,.2)" stroke-width=".8"/>
+          <text x="392" y="106" font-family="monospace" font-size="6" fill="rgba(6,182,212,.5)" text-anchor="middle">planner</text>
+          <!-- the dividing line annotation -->
+          <text x="210" y="174" font-family="monospace" font-size="7" fill="#1a3040" text-anchor="middle">Fastest. Smartest. Zero shared memory. The seams were always the weakness.</text>
+        </svg>
+      </div>
+
+      <!-- DISASTER CARD -->
+      <div class="dis r3">
+        <div class="dis-head">
+          <div class="dis-badge" style="background:rgba(6,182,212,.13);color:#06B6D4;">☠️ Jul 2024 · Global · Everyone Felt This</div>
+          <div class="dis-title">CrowdStrike — 8.5M Machines. $10B. 78 Lines of Config.</div>
+        </div>
+        <div class="dis-desc">A single content config update — no intent validation, no drift gate, no coherence check. Blue screens across 8.5 million machines: banks, airports, hospitals, emergency services. Fixed one machine at a time. Manually. AI-speed delivery with zero AI-level governance. The exact same gap as every era before it — just at 10× the scale.</div>
+        <div class="dis-stat" style="color:rgba(6,182,212,.5);">$10B+ global losses · Delta $500M alone · 8.5M machines · Manual fix, one by one · SmartSDLC catches config drift before it ships</div>
+      </div>
+
+      <!-- DINO PARALLEL -->
+      <div class="dino-parallel r4">
+        <div class="dp-ico">☄️</div>
+        <div>
+          <div class="dp-label">K-Pg · The New Extinction Mechanism</div>
+          <div class="dp-title">Speed Didn't Kill Them. Specialisation Without Resilience Did.</div>
+          <div class="dp-text">K-Pg didn't kill the biggest or fastest. It killed those whose adaptations were too specialised for the new environment — thriving in one world, unable to survive what they hadn't modelled. AI tools make your engineers 10× faster in their lane. But at the seams, the same gap that killed the dinosaurs is waiting. Coherence is the only thing that survives an extinction event.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ S5: ERA 5 — SMART SDLC REVEAL ══════════ -->
+<div class="scene" id="s5">
+  <div class="evo">
+    <div>
+      <div class="evo-ey r1">🧠 Era 5 — The Missing Layer. Now Found. Running in Production.</div>
+      <div class="evo-h r2">
+        <span class="e1">// this is</span>
+        <span class="e2">Smart</span>
+        <span class="e3">SDLC.</span>
+      </div>
+      <div class="evo-q r3"><strong>&ldquo;What if your SDLC remembered everything — so engineers didn't guess, pipelines didn't ship orphaned flags, and AI didn't compound context debt faster than humans could repair it?&rdquo;</strong></div>
+      <div class="evo-nums r4">
+        <div class="evo-num"><div class="evo-num-val">35%</div><div class="evo-num-label">Less rework<br>Validated intent</div></div>
+        <div class="evo-num"><div class="evo-num-val">60%</div><div class="evo-num-label">Faster onboarding<br>Memory queryable</div></div>
+        <div class="evo-num"><div class="evo-num-val">25%</div><div class="evo-num-label">Fewer syncs<br>Context automated</div></div>
+      </div>
+      <div class="evo-btn r5">🧠 SmartSDLC — See It In Action</div>
+
+      <div class="dino-parallel r6" style="margin-top:16px;border-color:rgba(74,222,128,.2);background:rgba(74,222,128,.04);">
+        <div class="dp-ico" style="animation:roar 3s ease-in-out infinite;">🐀</div>
+        <div>
+          <div class="dp-label" style="color:rgba(74,222,128,.6);">Era 5 · Post K-Pg Parallel</div>
+          <div class="dp-title" style="color:var(--dino);font-size:13px;">The Early Mammals — Small, Adaptive, and They Remembered Everything</div>
+          <div class="dp-text">When the asteroid hit, it wasn't the biggest or fastest creatures that survived — it was the small, warm-blooded mammals with <strong style="color:var(--text)">persistent memory</strong>. They cached knowledge across generations. They adapted faster than the environment changed. Smart SDLC is the mammal brain of your engineering org — not the strongest pipeline, but the one that <strong style="color:var(--text)">remembers why the fence was built</strong>, survives the next extinction event, and passes that memory forward.</div>
+        </div>
+      </div>
+    </div>
+    <div class="caps r3">
+      <div class="cap"><div class="cap-ico">🎯</div><div><div class="cap-title">Intent Lineage — The Fossil Immune System</div><div class="cap-desc">Every decision, every "why," permanently traceable. <em>POWEREDBYFLAG would never be orphaned. Y2K would have a paper trail. London Whale would have cross-team visibility.</em></div></div></div>
+      <div class="cap"><div class="cap-ico">🔍</div><div><div class="cap-title">Drift Detection — The Asteroid Early Warning System</div><div class="cap-desc">Catches divergence from intent <em>before it ships.</em> CrowdStrike's config would have failed the coherence gate. Not in the $10B post-mortem.</div></div></div>
+      <div class="cap"><div class="cap-ico">🧬</div><div><div class="cap-title">Coherence by Design — DNA, Not Luck</div><div class="cap-desc">Not dependent on the one Sarah who "just knows." Coherence is a <em>structural property</em> — encoded in the system like genetic memory, not locked in one person's skull.</div></div></div>
+      <div class="cap"><div class="cap-ico">🤖</div><div><div class="cap-title">AI-Governed Delivery — Evolution, Not Extinction</div><div class="cap-desc">Every AI output anchored to business intent. Copilots that <em>know why the system exists.</em> The mammals that survived the K-Pg event were small, adaptable, and had memory.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ S6: QR / QUIZ ══════════ -->
+<div class="scene" id="s6">
+  <div class="qr">
+    <div>
+      <div class="qr-ey r1">🦖 Think you survived Jurassic SDLC?</div>
+      <div class="qr-h r2">
+        <span class="qd">I Survived</span>
+        <span class="qp">Jurassic</span>
+        <span class="qt">SDLC.</span>
+      </div>
+      <p class="qr-sub r3">8 questions. 15 seconds each.<br>Y2K. London Whale. Knight Capital. CrowdStrike.<br><strong style="color:var(--dino)">Fossil or Evolution?</strong></p>
+      <div class="qr-steps r3">
+        <div class="qr-step"><span class="qr-n">1</span>Open your phone camera</div>
+        <div class="qr-step"><span class="qr-n">2</span>Point at the QR code →</div>
+        <div class="qr-step"><span class="qr-n">3</span>Answer 8 questions · Get your rank</div>
+      </div>
+      <div class="qr-tags r4">
+        <span class="qr-tag">🎮 Kahoot · Live</span>
+        <span class="qr-tag">🏆 Leaderboard</span>
+        <span class="qr-tag">🦖 Fossil or Evolution?</span>
+        <span class="qr-tag">🧠 Autonomous SDLC Rank</span>
+      </div>
+    </div>
+    <div class="qr-box r2">
+      <div class="qr-frame">
+        <canvas id="qrCanvas" width="200" height="200"></canvas>
+        <div class="qr-url-txt" id="qrUrlLabel">kahoot.it/game/XXXX</div>
+      </div>
+      <div class="qr-or">or visit directly</div>
+      <div class="qr-direct" id="qrLink">kahoot.it/game/XXXX</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="ft">
+  <div class="ft-l">Narayanan &middot; Gobind &middot; Sambit &mdash; Engineering Excellence</div>
+  <div class="ft-dots" id="ftDots"></div>
+  <div class="ft-r">Click / → / ← to navigate</div>
+</footer>
+
+<script>
+// ─── SCENES ───────────────────────────────────────────────────
+const SCENES=document.querySelectorAll('.scene'),N=SCENES.length;
+const DUR=11000;
+const CLRS=['#4ade80','#64748B','#F59E0B','#EF4444','#06B6D4','#4ade80','#4ade80'];
+let cur=0,t0=Date.now(),timer=null;
+const dotsEl=document.getElementById('ftDots');
+for(let i=0;i<N;i++){
+  const d=document.createElement('div');d.className='dot'+(i===0?' on':'');
+  d.addEventListener('click',e=>{e.stopPropagation();show(i);});
+  dotsEl.appendChild(d);
+}
+function show(idx){
+  SCENES[cur].classList.remove('on');
+  cur=((idx%N)+N)%N;
+  SCENES[cur].classList.add('on');
+  const c=CLRS[cur]||'#4ade80',p=document.getElementById('prog');
+  p.style.background=c;p.style.boxShadow='0 0 8px '+c+'aa';
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===cur));
+  t0=Date.now();clearTimeout(timer);
+  if(cur===N-1)setTimeout(drawQR,150);
+  timer=setTimeout(()=>show(cur+1),DUR);
+}
+timer=setTimeout(()=>show(1),DUR);
+(function tick(){document.getElementById('prog').style.width=Math.min(100,(Date.now()-t0)/DUR*100)+'%';requestAnimationFrame(tick);})();
+document.addEventListener('click',e=>{if(e.target.closest('.ft-dots')||e.target.closest('button')||e.target.closest('a'))return;show(cur+1);});
+document.addEventListener('contextmenu',e=>{e.preventDefault();show(cur-1);});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();show(cur+1);}if(e.key==='ArrowLeft'){e.preventDefault();show(cur-1);}});
+
+// ─── PARTICLES ────────────────────────────────────────────────
+(function(){
+  const canvas=document.getElementById('bgParticles');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const P=[];
+  const COLS=['rgba(74,222,128,','rgba(184,116,42,','rgba(168,85,247,','rgba(6,182,212,'];
+  class Pt{
+    constructor(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4;this.r=Math.random()*1.5+.3;this.op=Math.random()*.3+.05;this.col=COLS[Math.floor(Math.random()*COLS.length)];}
+    upd(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>canvas.width)this.vx*=-1;if(this.y<0||this.y>canvas.height)this.vy*=-1;}
+    drw(){ctx.fillStyle=this.col+this.op+')';ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fill();}
+  }
+  for(let i=0;i<45;i++)P.push(new Pt());
+  function anim(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    P.forEach(p=>{p.upd();p.drw();});
+    for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){
+      const dx=P[i].x-P[j].x,dy=P[i].y-P[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<140){ctx.strokeStyle='rgba(74,222,128,'+(0.03*(1-d/140))+')';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(P[i].x,P[i].y);ctx.lineTo(P[j].x,P[j].y);ctx.stroke();}
+    }
+    requestAnimationFrame(anim);
+  }
+  anim();
+})();
+
+// ─── QR CODE ──────────────────────────────────────────────────
+const QUIZ_URL='https://kahoot.it/game/REPLACE-WITH-YOUR-CODE';
+function drawQR(){
+  const canvas=document.getElementById('qrCanvas');if(!canvas)return;
+  const ctx=canvas.getContext('2d'),size=200;
+  const lbl=QUIZ_URL.replace('https://','');
+  const e1=document.getElementById('qrUrlLabel'),e2=document.getElementById('qrLink');
+  if(e1)e1.textContent=lbl;if(e2)e2.textContent=lbl;
+  const img=new Image();
+  img.onload=()=>ctx.drawImage(img,0,0,size,size);
+  img.onerror=()=>fallbackQR(ctx,size);
+  img.src='https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl='+encodeURIComponent(QUIZ_URL)+'&choe=UTF-8&chld=M|1';
+}
+function fallbackQR(ctx,s){
+  const c=s/21;ctx.fillStyle='#fff';ctx.fillRect(0,0,s,s);
+  [[0,0],[14,0],[0,14]].forEach(([x,y])=>{ctx.fillStyle='#111';ctx.fillRect(x*c,y*c,7*c,7*c);ctx.fillStyle='#fff';ctx.fillRect((x+1)*c,(y+1)*c,5*c,5*c);ctx.fillStyle='#111';ctx.fillRect((x+2)*c,(y+2)*c,3*c,3*c);});
+  let seed=77;const rand=()=>{seed=(seed*16807)%2147483647;return(seed-1)/2147483646;};
+  ctx.fillStyle='#111';
+  for(let r=0;r<21;r++)for(let col=0;col<21;col++){const f=(r<8&&col<8)||(r<8&&col>12)||(r>12&&col<8);if(!f&&rand()>.5)ctx.fillRect(col*c,r*c,c,c);}
+}
+</script>
+</body>
+</html>
