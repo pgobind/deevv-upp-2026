@@ -327,7 +327,7 @@
     <p>Watch the agent flow. The Retrieval Agent fires first — it's a Lambda function pulling regulatory context and prior CFTC correspondence from Neptune. Then the Generation Agent — another Lambda — drafts the letter using Bedrock. And now the <span class="key">Reviewer Agent</span> kicks in — it validates the draft against our compliance rules, checks that every claim traces to a source, flags anything ungrounded.</p>
     <p>Only after the Reviewer Agent passes it — look, there's the green checkmark — does it land in the <span class="key">Human-in-the-Loop approval queue</span>. I review it, I approve or edit, and only then does it become an official artefact. AI proposes. Reviewer validates. Human approves.</p>
     <p>And now — look. In under 30 seconds, it's produced a structured CFTC letter draft. Not a generic template. A letter that references our actual cross-border policies, cites the correct regulatory sections, and maintains the language patterns from our previous correspondence.</p>
-    <p>But here's the real power — every sentence in this draft traces back to a source. Click any paragraph and you see the lineage: which regulation, which internal policy, which prior decision informed this output. All stored in Neptune, all traversable. <span class="key">That's not autocomplete. That's institutional memory at work.</span>"</p>
+    <p>And none of this is floating text. Every claim in this letter is traceable — back to the regulation, the internal policy, the prior decision that informed it. <span class="key">That's not autocomplete. That's institutional memory at work.</span>"</p>
   </div>
 </div>
 
@@ -336,24 +336,28 @@
     <span class="slide-num gob">Slide 17</span>
     <span class="timing">~17:30</span>
   </div>
-  <div class="stage-note">⚡ LIVE DEMO PART 2. Operational view showing the delivery graph and dependency detection. Show speed and interconnectedness.</div>
+  <div class="stage-note">⚡ LIVE DEMO PART 2. Product walkthrough — click real tabs, show real connections. This is where the audience sees the product, not a concept.</div>
   <div class="speaker gob">GOBIND</div>
   <div class="script">
-    <p>"Now let me show you the operational view. I'll click into the 'Deliveries Automation Project.'</p>
+    <p>"Now let me show you what a project actually looks like inside SmartSDLC. I'll click into the 'Deliveries Automation' project — Futures &amp; Options."</p>
     <p>[Click on Deliveries Automation Project]</p>
-    <p>Every project in SmartSDLC has a full set of tabs. Let me walk you through each one:</p>
-    <p><span class="key">Overview tab</span> — your project health at a glance. Status, team, timeline, and the intent chain showing why this project exists and what business outcome it serves.</p>
-    <p><span class="key">Requirements tab</span> — not just user stories. Every requirement traces to a business decision. You can see who created it, when, and the AI-validated acceptance criteria. No orphaned requirements.</p>
-    <p><span class="key">Architecture tab</span> — living ADRs. Not a PDF that slowly gets violated. Every decision record shows its current status, what it impacts, and whether the code has drifted from the decision.</p>
-    <p><span class="key">Sprint Board</span> — and this is where it gets interesting. SmartSDLC doesn't just track work. It predicts risk. See that amber flag? The system has detected a dependency conflict before the team even started the sprint.</p>
-    <p><span class="key">Delivery Graph tab</span> — this is the crown jewel.</p>
-    <p>[Click on Delivery Graph]</p>
-    <p>Watch the speed. I'm querying: 'Show me every artefact connected to the cross-border threshold rule.'</p>
+    <p>"See these tabs across the top? Each one is a different lens into the same connected graph. Let me click through them — and watch how every tab traces back to intent.</p>
+    <p>[Click Overview tab]</p>
+    <p><span class="key">Overview</span> — project health at a glance. But notice: it doesn't just say 'on track.' It shows <em>why</em> — the intent chain from business outcome down to current sprint status. That chain is live. It updates as work moves.</p>
+    <p>[Click Requirements tab]</p>
+    <p><span class="key">Requirements</span> — every story here traces to a business decision. Click any story and you see: who created it, what architecture decision it implements, and AI-validated acceptance criteria. No orphaned requirements floating in Jira.</p>
+    <p>[Click Architecture tab]</p>
+    <p><span class="key">Architecture</span> — living ADRs. Not a PDF gathering dust. Each decision shows what code implements it and whether that code has drifted from the decision. That's a live connection, not a document.</p>
+    <p>And now — the crown jewel.</p>
+    <p>[Click Delivery Graph tab]</p>
+    <p><span class="key">Delivery Graph</span>. I'm going to query: 'Show me every artefact connected to the cross-border threshold rule.'</p>
     <p>[Execute the query]</p>
-    <p>The graph traverses in under 10 seconds. Why is it this fast? Because Neptune stores everything as nodes and edges — not rows in a table. A requirement is a node. An architecture decision is a node. A code module, a test case, a deployment — all nodes. And the relationships between them — 'implements,' 'traces-to,' 'depends-on,' 'approved-by' — are typed edges. When I query, Neptune doesn't scan tables. It walks edges. Native graph traversal across millions of nodes in milliseconds.</p>
-    <p>Look at what it returned: strategy node, architecture decision, three code modules, test coverage, deployment evidence, and runtime signals. All connected. All live. All in seconds.</p>
-    <p>A regulator asks why this rule exists? You don't launch a three-week audit. You click. The answer is right here — origin, approval chain, implementation, and evidence. Seconds, not weeks.</p>
-    <p><span class="key">That is the delivery graph. Nothing floats. Nothing is lost.</span>"</p>
+    <p>Watch the speed."</p>
+    <span class="pause">Let the graph render. 3 seconds.</span>
+    <p>"Under 10 seconds. Strategy node, architecture decision, three code modules, test coverage, deployment evidence, runtime signals — all connected, all live.</p>
+    <p>Why this fast? Simple: graph databases don't scan rows. They walk edges. A requirement is a node. An architecture decision is a node. Code, tests, deployments — all nodes. The relationships between them — 'implements,' 'traces-to,' 'depends-on' — are typed edges. When I query, Neptune walks those edges natively. Millions of connections, milliseconds.</p>
+    <p>A regulator asks why this rule exists? You click. Origin, approval chain, implementation, evidence — all here. Seconds, not a three-week audit.</p>
+    <p><span class="key">Nothing floats. Nothing is lost.</span>"</p>
   </div>
 </div>
 
@@ -462,10 +466,13 @@
   </div>
   <div class="speaker sam">SAMBIT</div>
   <div class="script">
-    <p>"Developers. I am writing code for move_herbivores(). The system pushes the 'Dinosaur Intent' right to my cursor. I don't have to leave my IDE to check Confluence. <span class="key">The context finds me.</span></p>
-    <p>Developers today spend cognitive energy reconstructing context. Why was this added? What constraint applies? What policy governs this logic? Smart SDLC eliminates archaeology.</p>
-    <p>Inside the IDE: Intent surfaces contextually. Design rationale appears inline. Regulatory constraints are retrieved automatically. Tests are generated from business logic before implementation.</p>
-    <p>This reduces rework, Slack clarifications, misaligned implementations, and late-cycle surprises. Engineering velocity improves not because developers move faster — <span class="key">but because they move with clarity.</span>"</p>
+    <p>"Developers. Let me show you what this actually feels like. I'm in the IDE. I'm looking at a function — calculate_margin_threshold(). I have no idea why this logic exists. Normally, I'd spend an hour in Confluence, Slack, maybe ask three people.</p>
+    <p>Instead, I type into the SmartSDLC panel: <span class="key">'What does this code do and why does it exist?'</span></p>
+    <p>[Show the developer IDE view — type the query]</p>
+    <p>Watch. The system doesn't just read the code. It scans the delivery graph. It finds the architecture decision that created this logic, the business intent behind it, the regulatory constraint it satisfies, and the test cases that validate it. All of that — surfaced in seconds, right at my cursor.</p>
+    <p>I didn't leave my IDE. I didn't search Confluence. I didn't ping anyone on Slack. <span class="key">The context found me.</span></p>
+    <p>That's the difference. Smart SDLC doesn't just help you write code faster — it helps you write the <em>right</em> code. Intent surfaces contextually. Design rationale appears inline. Regulatory constraints are retrieved automatically.</p>
+    <p>Engineering velocity improves not because developers move faster — <span class="key">but because they move with clarity.</span>"</p>
   </div>
   <div class="handoff">→ Hand to GOBIND</div>
 </div>
@@ -501,21 +508,31 @@
     <span class="slide-num gob">Slide 26</span>
     <span class="timing">~25:30</span>
   </div>
-  <div class="change-tag"><strong>CHANGED v7:</strong> Architecture moved here to match PPT position. Updated with PPT agent terminology. Added MCP, caching, OpenSearch.</div>
+  <div class="change-tag"><strong>CHANGED v9:</strong> Architecture — Gobind solo speaker, but made engaging with callbacks to demo, rhetorical questions, and audience hooks. Consolidated to 5 PPT layers. Speed explained via analogy.</div>
   <div class="speaker gob">GOBIND</div>
   <div class="script">
-    <p>"You've seen what it does. Now let me show you how it's built. This slide is for the engineers and architects in the room — this is the Technical Architecture, a governed, scalable reasoning layer. I'll walk through each layer top-down."</p>
-    <p><span class="key">Experience Layer</span> — React front-end with ADFS SSO for enterprise authentication. Chat UI, file uploads, project dashboards, response rendering. No training required.</p>
-    <p><span class="key">Semantic Router &amp; Context Window</span> — this is the first thing that fires. Before the LLM is even invoked, the system analyses intent and dynamically assembles context from the Delivery Graph — pulling code, Jira tickets, architecture docs, prior decisions. The right context, assembled before reasoning begins.</p>
-    <p><span class="key">Control Layer — Multi-Agent Orchestration</span>. This is the brain. Agents for every persona — PO Agent, Architect Agent, Reviewer Agent — with workflows, iteration limits, and human-in-the-loop gates. The orchestration runs on LangGraph, deployed as AWS Lambda functions.</p>
-    <p><span class="key">Intelligence Layer</span> — three specialised agents working together. The <span class="key">Planner Agent</span> breaks complex queries into sub-tasks. The <span class="key">Execution Agent</span> calls enterprise-grade foundation models via Amazon Bedrock — Claude, GPT-4, model-agnostic by design. The <span class="key">Critic Agent</span> validates every output against known constraints before it goes further.</p>
-    <p><span class="key">Knowledge &amp; Action Layer</span> — Amazon Neptune as both graph store and vector memory. Nodes and edges for structural queries. Vector embeddings for semantic search across Confluence, Jira, Jules, JET, ServiceNow, SharePoint. We also use <span class="key">Amazon OpenSearch</span> for full-text search and log analytics — complementing Neptune's graph traversal with keyword-level precision. And <span class="key">MCP — Model Context Protocol</span> — the standardised interface that lets our agents talk to external tools and data sources without custom integrations. MCP means we plug into any enterprise system with a consistent protocol, not bespoke connectors.</p>
-    <p><span class="key">Caching Layer</span> — semantic caching at the retrieval and generation layers. If a similar query has been answered recently, the system serves from cache — reducing latency and foundation model costs. Neptune's vector similarity drives cache hits, so you get fast responses without sacrificing freshness.</p>
-    <p><span class="key">Enterprise Guardrails</span> — this is the governance lock. <span class="key">Pre-Guard</span>: permission enforcement before any agent acts. <span class="key">Post-Guard</span>: syntax validation, compliance checks, and the Human-in-the-Loop approval gate. Nothing reaches production without human sign-off. And there's a <span class="key">Feedback Loop</span>: every accepted action feeds back into vector memory, so the system gets smarter with use.</p>
-    <p><span class="key">Platform Layer</span> — S3 for document storage and artefact persistence. Lambda for serverless compute — no idle servers, scales to zero, scales to thousands concurrently. Full audit trail — every decision logged, every output traceable to its input. That traceability is not just for compliance — it's how we debug at speed. Any artefact, any decision, any output — you can trace the full lineage in seconds.</p>
-    <p>The governing principle: <span class="key">Truth stays in the systems of record. Reasoning is governed by AI. Actions are always human-approved. That's the Governance Lock.</span>"</p>
+    <p>"Alright — you've seen it work. The tabs. The graph query. The CFTC letter in 30 seconds. Now the question every engineer in this room is asking: <em>how?</em></p>
+    <p>Five layers. I'll connect each one back to what you just saw on screen.</p>
+
+    <p><span class="key">Layer 1: Experience.</span> React front-end, ADFS SSO. Remember those tabs I was clicking — Overview, Requirements, Architecture, Sprint Board, Delivery Graph? That's this layer. Chat UI, file uploads, project dashboards. No training required. You log in and your role-aware workspace is already waiting. The PO, the developer, the director — they all log into the same system. They see different views because the experience layer knows who you are. Same graph underneath, different lens on top.</p>
+
+    <p><span class="key">Layer 2: Control.</span> Now — here's a question. When I typed that CFTC letter requirement, did the system just throw it at an LLM and hope for the best?"</p>
+    <span class="pause">Pause. Let the room think.</span>
+    <p>"No. And that's the Control layer. Before any agent reasons, a Semantic Router fires first. It analyses your intent and dynamically pulls context from the delivery graph — code, Jira tickets, architecture docs, prior decisions. The right context, assembled <em>before</em> reasoning begins. Then multi-agent orchestration kicks in — running on LangGraph, deployed as Lambda functions. PO Agent, Architect Agent, Reviewer Agent — each with workflows, iteration limits, and human-in-the-loop gates. The control layer decides <em>what</em> runs, <em>when</em>, and <em>when to pause for a human</em>. No autonomous free-for-all.</p>
+
+    <p><span class="key">Layer 3: Intelligence.</span> Remember the CFTC letter? Three agents worked on that. The Planner broke the query into sub-tasks. The Execution Agent called foundation models via Amazon Bedrock — Claude, GPT-4, model-agnostic by design. And the Critic Agent — this is the one that matters — validated the output against compliance rules before it went anywhere. It's not one agent generating and hoping. It's plan, execute, critique — in a loop. Three gates, not one. And only after the Critic passes it does it land in the human approval queue.</p>
+
+    <p>Now — <span class="key">Layer 4: Knowledge.</span> This is the one that answers the speed question.</p>
+    <p>Remember the delivery graph query? 'Show me everything connected to the cross-border threshold rule.' Under 10 seconds. Millions of connections. How?</p>
+    <p>Think of it this way. A traditional database stores data in rows. To answer that query, it would need dozens of table joins — scanning, matching, assembling. A graph database stores data as nodes and edges. A requirement is a node. An architecture decision is a node. Code, tests, deployments — all nodes. The relationships — 'implements,' 'traces-to,' 'depends-on' — are typed edges. When you query, it doesn't scan. <span class="key">It walks.</span> Native traversal. That's Amazon Neptune — graph store and vector memory in one.</p>
+    <p>On top of that: OpenSearch for full-text search and log analytics. MCP — Model Context Protocol — think of it as a universal plug. Instead of building a custom connector for every enterprise tool, MCP gives every agent one standard way to talk to Jira, Confluence, ServiceNow, SharePoint. One protocol, plug and play. And semantic caching — if a similar query was answered recently, the system serves from cache. Faster response, lower cost, freshness preserved.</p>
+    <p>So no — the speed isn't because it's skipping steps. It's because <span class="key">the data structure itself is built for connected questions.</span></p>
+
+    <p><span class="key">Layer 5: Governance.</span> And this is the lock on everything. Because — let's be honest — no one in banking ships AI without guardrails.</p>
+    <p>Pre-Guard enforces permissions before any agent acts. Post-Guard runs compliance checks and syntax validation. The Human-in-the-Loop gate — nothing reaches production without human sign-off. Every decision logged. Every output traceable to its input. Full audit trail on S3. And there's a feedback loop — every accepted action feeds back into vector memory, so the system learns from use. That traceability isn't just for compliance. It's how we debug at speed. Any artefact, any decision — full lineage in seconds.</p>
+
+    <p>Five layers. One governing principle: <span class="key">Truth stays in systems of record. Reasoning is governed by AI. Authority is always human. That's the Governance Lock.</span>"</p>
   </div>
-  <div class="handoff">→ Hand to SAMBIT</div>
 </div>
 
 <div class="slide">
