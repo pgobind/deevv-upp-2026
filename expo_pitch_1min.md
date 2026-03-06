@@ -40,7 +40,12 @@ Intelligence is AI-driven. Authority is **always human.**
 
 **This screen** *(gesture to Monitor 1)* — we've mapped every paradigm of software delivery to a Jurassic era. Waterfall is the Brachiosaurus — enormous, majestic, can't turn around. Agile is the Gallimimus — a stampede that thinks, pivoting as one. DevOps, the Spinosaurus — apex predator that conquered land and sea. AI-Augmented, the Indominus — engineered, brilliant, uncontainable. Five dominant species, five extinction events — and only one survived. We call her **Blue**. She's SmartSDLC.
 
-**That screen** *(gesture to Monitor 2)* — Blue in action. The live delivery graph powering a PO's planning forge, a developer's IDE, and a Director's command center. Intent to code to evidence — running live.
+**That screen** *(gesture to Monitor 2)* — the delivery graph, live. You'll see:
+The graph that connects your entire tool stack into one.
+A PO planning with AI-validated stories. A developer pulling full context at the cursor. A director with real-time delivery confidence.
+A live query — the graph answering in seconds what used to take weeks.
+The five-layer architecture powering it all. Closed-loop delivery that self-corrects against original intent. And a sprint board that doesn't track work — it **predicts risk**.
+Speed was the first act. **Coherence** is the next.
 
 *(Close — confident, inviting)*
 
