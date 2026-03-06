@@ -1,7 +1,6 @@
 # SmartSDLC — 1-Minute Expo Pitch
 
-**Audience Hook / Delivery Target: ~60 seconds**
-**Tone: Elevated, visionary, cinematic — draws people in from across the expo floor**
+**Delivery Target: ~60 seconds | Tone: Elevated, visionary, cinematic**
 
 ---
 
@@ -9,50 +8,51 @@
 
 *(Open with imagination — slow, deliberate, magnetic)*
 
-**Imagine** an auditor asks: "Why does this threshold exist?"
+**Imagine** an auditor asks: "Why does this cross-border instrument reporting threshold exist?"
 
-Today — that's a three-week archaeological dig. Slack threads. Wiki pages. Chasing down people who left two years ago. Maybe you find the answer. Maybe you don't.
+Today — that's a three-week dig. Slack threads. Wiki pages. Chasing down people who left two years ago. Maybe you find the answer. Maybe you don't.
 
-*(Beat — shift the frame)*
+Now imagine the system **answers in eight seconds.** The original business decision. Who approved it. The regulatory constraint. Every downstream dependency. All connected. All traceable.
 
-Now imagine the system **answers in eight seconds.** The original business decision. Who approved it. The regulatory constraint. Every service that depends on it. All connected. All traceable.
-
-*(Elevate — this is the vision)*
+*(Name it)*
 
 **That's SmartSDLC.**
 
-See, Copilot writes your code faster. ChatGPT answers your questions. Jira tracks your tickets. But **none of them know why you're building what you're building.** None of them connect intent to architecture to code to evidence. They're brilliant islands — with no bridges.
+*(Differentiate — this is the line that separates you)*
 
-SmartSDLC is the **delivery graph** — one living, connected system where every business decision flows through to code, and every line of code traces back to the reason it exists.
+Copilot writes your code faster. ChatGPT answers your questions. Jira tracks your tickets. But **none of them know *why* you're building what you're building.** They're brilliant islands — with no bridges.
 
-*(Bring it home — three roles, rapid fire)*
+SmartSDLC is the bridge. One **delivery graph** — intent to architecture to code to evidence — where nothing gets lost and everything traces back.
 
-Your PO plans with AI-validated stories and instant impact analysis. Your developer codes with full context at the cursor — zero wait states. Your Director sees delivery confidence in real time — **no status calls. No spreadsheet theatre.**
+*(Three roles — staccato, punchy)*
+
+Your **PO** plans with AI-validated stories and instant impact analysis.
+Your **Developer** codes with full context at the cursor — zero wait states.
+Your **Director** sees delivery confidence in real time. **No status calls. No spreadsheet theatre.**
 
 *(The principle — land it with gravity)*
 
 Intelligence is AI-driven. Authority is **always human.**
 
-*(Transition to monitors — gesture naturally, guide their eyes)*
+*(Transition to monitors — gesture, guide their eyes)*
 
-**And we're showing you the whole story right here.**
+**We're showing you the whole story right here — and we've told it through dinosaurs.**
 
-**This screen** *(gesture to Monitor 1)* — the evolution. Five paradigms of software delivery — from Waterfall to AI-Autonomous — and why each dominant species believed it had solved survival. Spoiler: only one made it. We call her Blue.
+**This screen** *(gesture to Monitor 1)* — we've mapped every paradigm of software delivery to a Jurassic era. Waterfall is the Brachiosaurus — enormous, majestic, can't turn around. Agile is the Gallimimus — a stampede that thinks, pivoting as one. DevOps, the Spinosaurus — apex predator that conquered land and sea. AI-Augmented, the Indominus — engineered, brilliant, uncontainable. Five dominant species, five extinction events — and only one survived. We call her **Blue**. She's SmartSDLC.
 
-**That screen** *(gesture to Monitor 2)* — the live delivery graph in action. Watch a PO validate stories, a developer pull full context at the cursor, and a Director see delivery confidence — all from one connected graph. Intent to code to evidence, running live.
+**That screen** *(gesture to Monitor 2)* — Blue in action. The live delivery graph powering a PO's planning forge, a developer's IDE, and a Director's command center. Intent to code to evidence — running live.
 
-*(Final call to action — open, inviting)*
+*(Close — confident, inviting)*
 
-**Step in. Pick the screen that pulls you. This is what delivery looks like when nothing gets lost.**
+**Step in. Pick the screen that pulls you. This is evolution — happening now.**
 
 ---
 
 ### Speaker Notes
 
-- **Pace:** Start slow and intimate on "Imagine" — almost conversational, like you're pulling one person in. Build energy through the differentiation section. Hit the three roles fast and punchy. Slow back down for the governance principle. End warm and inviting.
-- **The "Imagine" opening:** This works because it puts the audience *inside* a pain they already know. They're nodding before you've even said the product name.
-- **Differentiation beat:** The "Copilot / ChatGPT / Jira — brilliant islands, no bridges" line is the key differentiator. Pause slightly after "no bridges" to let it land.
-- **Monitor introductions:** These are short and vivid on purpose — just enough to give people a reason to walk toward each screen. "Blue" is the dinosaur metaphor from Monitor 1 (AI-Autonomous era); it rewards curiosity. The Monitor 2 intro names all three role demos so people self-select.
-- **Gesture toward monitors:** Physically point to each screen when you say "This screen" and "That screen." Body language sells the booth.
-- **Key pause points:** After "Maybe you don't" (empathy), after "eight seconds" (wonder), after "no bridges" (the gap), after "Blue" (intrigue), and before the final CTA.
-- **Word count:** ~280 words ≈ 65–75 seconds at expo delivery pace. If you need to tighten to 60s, trim the three-role rapid-fire section slightly.
+- **Pace:** Slow and intimate on "Imagine." Build through the differentiation. Staccato on the three roles. Drop to gravity on the governance principle. Warm and theatrical for the Jurassic monitor intro. Confident on the close.
+- **The Jurassic callout:** Naming the dinosaur-to-paradigm mapping explicitly gives people a reason to look at Monitor 1 — it's unexpected, memorable, and rewards curiosity. Saying "Blue" by name creates a character they want to meet.
+- **Differentiation:** "Brilliant islands, no bridges" is your kill shot. Pause after it.
+- **Three roles:** Each role is now its own beat — easier to deliver, easier to land.
+- **Key pauses:** After "Maybe you don't." After "no bridges." After "always human." After "Blue." Before the final line.
+- **Word count:** ~300 words ≈ 70–78 seconds at expo pace. The dino rollcall is the crowd-pleaser — deliver it with rhythm and energy, almost like an announcer introducing fighters. If you need to trim to 60s, shorten each dino to just the name (e.g., "Brachiosaurus. Gallimimus. Spinosaurus. Indominus.") and let the screen visuals do the rest.
