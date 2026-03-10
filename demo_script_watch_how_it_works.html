@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart SDLC — "Watch How It Works" Demo Script v3</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Georgia', 'Times New Roman', serif; background: #FAFAF8; color: #1a1a1a; max-width: 940px; margin: 0 auto; padding: 20px 30px 60px; line-height: 1.75; }
+
+  .cover { text-align: center; padding: 40px 20px 28px; margin-bottom: 30px; border-bottom: 3px solid #1B1F3B; }
+  .cover h1 { font-size: 30px; color: #1B1F3B; letter-spacing: 2px; margin-bottom: 6px; }
+  .cover h2 { font-size: 15px; color: #888; font-weight: 400; letter-spacing: 1px; }
+  .cover .meta { font-size: 13px; color: #aaa; margin-top: 14px; }
+
+  /* ---- MASTER CHEAT SHEET ---- */
+  .cheatsheet { background: #1B1F3B; color: white; padding: 24px 28px; margin: 0 0 36px; border-radius: 8px; page-break-after: always; }
+  .cheatsheet h2 { font-size: 16px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; color: #FFD966; }
+  .cheatsheet .cs-row { display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start; }
+  .cheatsheet .cs-time { min-width: 60px; font-size: 12px; color: #aab; font-family: monospace; padding-top: 2px; }
+  .cheatsheet .cs-pill { font-size: 11px; font-weight: 700; color: white; padding: 2px 10px; border-radius: 10px; white-space: nowrap; min-width: 80px; text-align: center; }
+  .pill-po { background: #2E7D5B; }
+  .pill-arch { background: #7B4B94; }
+  .pill-dev { background: #2C5F8A; }
+  .pill-dir { background: #D4A843; }
+  .pill-wrap { background: #E8652A; }
+  .cheatsheet .cs-content { flex: 1; }
+  .cheatsheet .cs-pain { font-size: 13px; color: #ccc; font-style: italic; }
+  .cheatsheet .cs-do { font-size: 14px; color: white; margin-top: 2px; }
+  .cheatsheet .cs-punchline { font-size: 13px; color: #FFD966; font-weight: 600; margin-top: 2px; }
+  .cheatsheet .cs-divider { border: none; border-top: 1px solid #333; margin: 14px 0; }
+  .cheatsheet .cs-mantra { text-align: center; font-size: 15px; color: #FFD966; font-weight: 700; letter-spacing: 1px; margin-top: 10px; }
+
+  /* ---- INLINE OUTLINE (per persona) ---- */
+  .inline-outline { background: #f8f8f6; border: 2px dashed #ccc; border-radius: 8px; padding: 14px 20px; margin: 0 0 20px; font-size: 13px; }
+  .inline-outline .io-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #999; margin-bottom: 8px; }
+  .inline-outline .io-step { display: flex; gap: 8px; margin-bottom: 5px; align-items: flex-start; }
+  .inline-outline .io-num { font-weight: 700; color: white; background: #aaa; width: 20px; height: 20px; border-radius: 50%; text-align: center; font-size: 11px; line-height: 20px; flex-shrink: 0; }
+  .inline-outline .io-num.po { background: #2E7D5B; }
+  .inline-outline .io-num.arch { background: #7B4B94; }
+  .inline-outline .io-num.dev { background: #2C5F8A; }
+  .inline-outline .io-num.dir { background: #D4A843; }
+  .inline-outline .io-text { color: #444; }
+  .inline-outline .io-text em { color: #999; }
+  .inline-outline .io-punch { margin-top: 8px; padding-top: 8px; border-top: 1px solid #ddd; font-weight: 700; }
+  .inline-outline .io-punch.po { color: #2E7D5B; }
+  .inline-outline .io-punch.arch { color: #7B4B94; }
+  .inline-outline .io-punch.dev { color: #2C5F8A; }
+  .inline-outline .io-punch.dir { color: #D4A843; }
+
+  /* ---- PERSONA SECTIONS ---- */
+  .persona-banner { padding: 12px 24px; margin: 40px 0 14px; font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: white; display: flex; justify-content: space-between; align-items: center; border-radius: 4px 4px 0 0; }
+  .persona-banner .timing-range { font-size: 12px; font-weight: 400; letter-spacing: 0; text-transform: none; opacity: 0.8; }
+  .persona-po { background: #2E7D5B; }
+  .persona-arch { background: #7B4B94; }
+  .persona-dev { background: #2C5F8A; }
+  .persona-dir { background: #D4A843; }
+
+  /* Intent box */
+  .intent-box { background: #f0f7f4; border-left: 4px solid #2E7D5B; padding: 10px 16px; margin: 0 0 14px; font-size: 13px; color: #555; }
+  .intent-box.arch { background: #f5f0f8; border-left-color: #7B4B94; }
+  .intent-box.dev { background: #f0f4f8; border-left-color: #2C5F8A; }
+  .intent-box.dir { background: #fdf8ee; border-left-color: #D4A843; }
+  .intent-box strong { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 3px; color: #333; }
+
+  .section { margin: 18px 0; padding: 0 0 18px; border-bottom: 1px solid #e8e8e8; }
+  .section:last-child { border-bottom: none; }
+
+  .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .section-label { font-size: 12px; font-weight: 700; color: white; padding: 3px 14px; border-radius: 12px; letter-spacing: 0.5px; }
+  .label-po { background: #2E7D5B; }
+  .label-arch { background: #7B4B94; }
+  .label-dev { background: #2C5F8A; }
+  .label-dir { background: #D4A843; }
+  .label-trans { background: #E8652A; }
+  .timing { font-size: 12px; color: #999; font-style: italic; }
+
+  .script p { margin-bottom: 8px; font-size: 15px; }
+  .key { background: #FFF3CD; padding: 1px 4px; font-weight: 600; }
+  .click { color: #E8652A; font-weight: 600; font-style: italic; font-size: 13px; display: block; margin: 6px 0; }
+  .click::before { content: "▶ "; }
+  .pause { display: block; color: #999; font-style: italic; font-size: 13px; margin: 5px 0; }
+
+  .stage-note { background: #FFF8E1; border-left: 4px solid #E8652A; padding: 10px 14px; margin: 10px 0; font-size: 13px; color: #555; }
+
+  .handoff { font-size: 13px; color: #E8652A; font-weight: 700; margin-top: 10px; letter-spacing: 0.5px; padding: 8px 14px; background: #FFF3E0; border-radius: 6px; }
+
+  /* Audience engagement */
+  .audience { background: #E3F2FD; border-left: 4px solid #1976D2; padding: 10px 14px; margin: 10px 0; font-size: 14px; color: #1565C0; }
+  .audience::before { content: "👥 "; }
+
+  @media print {
+    body { max-width: 100%; padding: 10px; }
+    .persona-banner { break-before: page; }
+    .cheatsheet { break-after: page; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>SMART SDLC</h1>
+  <h2>"Watch How It Works" — Live Demo Script v4</h2>
+  <div class="meta">
+    DevUp / Cloud &amp; AI Summit — March 2026<br>
+    Gobind Praharaj | JPMorganChase<br>
+    ~8 Minutes · 4 Personas · Live Demo<br><br>
+    <strong style="color: #E8652A;">This is NOT a script to memorize.<br>It's a map. Know the outline. Know the punchlines. Talk naturally.</strong>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!--  MASTER CHEAT SHEET                                                -->
+<!-- ================================================================== -->
+<div class="cheatsheet">
+  <h2>Master Outline — Glance Between Transitions</h2>
+
+  <div class="cs-row">
+    <span class="cs-time">0:00</span>
+    <span class="cs-pill pill-po">PO</span>
+    <div class="cs-content">
+      <div class="cs-pain">"Friday afternoon, stitching status decks..."</div>
+      <div class="cs-do">Joshi → Pulse → <strong>Deliveries Automation tabs (Context, Reqs, Arch, Roadmap, ADRs)</strong> → Agentic Scrum Master → Drift Detection → Forge → Draft Initiative</div>
+      <div class="cs-punchline">"The status deck wrote itself."</div>
+    </div>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-row">
+    <span class="cs-time">2:30</span>
+    <span class="cs-pill pill-arch">ARCH</span>
+    <div class="cs-content">
+      <div class="cs-pain">"When did anyone last check an ADR before a PR?"</div>
+      <div class="cs-do">Architecture tab → Change Lock → Delivery Graph (THE moment)</div>
+      <div class="cs-punchline">"Root cause becomes graph traversal."</div>
+    </div>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-row">
+    <span class="cs-time">3:45</span>
+    <span class="cs-pill pill-dev">DEV</span>
+    <div class="cs-content">
+      <div class="cs-pain">"Who wrote this? Why? Can I change it?"</div>
+      <div class="cs-do">Log in Deepa → IDE query → context at cursor → CI/CD + ServiceNow</div>
+      <div class="cs-punchline">"The context found her."</div>
+    </div>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-row">
+    <span class="cs-time">5:30</span>
+    <span class="cs-pill pill-dir">DIR</span>
+    <div class="cs-content">
+      <div class="cs-pain">"3 updates, 3 truths, none answer the real question"</div>
+      <div class="cs-do">Director dashboard → click initiative → Intent-to-Production chain</div>
+      <div class="cs-punchline">"Not a status deck. Institutional proof."</div>
+    </div>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-row">
+    <span class="cs-time">7:00</span>
+    <span class="cs-pill pill-wrap">WRAP</span>
+    <div class="cs-content">
+      <div class="cs-do">Four roles → one system → tease the "how" → hand to architecture</div>
+      <div class="cs-punchline">"Same graph, different lens. Let me take you under the hood."</div>
+    </div>
+  </div>
+
+  <div class="cs-mantra">ONE SYSTEM · FOUR LENSES · SAME GRAPH</div>
+</div>
+
+<!-- ================================================================== -->
+<!--  PERSONA 1: PRODUCT OWNER                                          -->
+<!-- ================================================================== -->
+<div class="persona-banner persona-po">
+  Product Owner <span class="timing-range">0:00 – 2:30</span>
+</div>
+
+<div class="intent-box">
+  <strong>What the audience should walk away feeling</strong>
+  "This isn't a prototype. There's a real project running. Sprints are created automatically. Drift is caught. And the PO steers all of it from one place."
+</div>
+
+<div class="inline-outline">
+  <div class="io-title">Your Roadmap For This Section</div>
+  <div class="io-step"><span class="io-num po">1</span> <span class="io-text">Paint the Friday problem <em>(status deck ritual — 15 sec)</em></span></div>
+  <div class="io-step"><span class="io-num po">2</span> <span class="io-text">Log in as Joshi → Execution Pulse <em>(evidence-based status — 15 sec)</em></span></div>
+  <div class="io-step"><span class="io-num po">3</span> <span class="io-text">Open Deliveries Automation — walk tabs: Context → Requirements → Architecture → Roadmap → ADRs <em>(credibility moment — 35 sec)</em></span></div>
+  <div class="io-step"><span class="io-num po">4</span> <span class="io-text">Agentic Scrum Master — auto sprints, auto stories, continuous monitoring <em>(25 sec)</em></span></div>
+  <div class="io-step"><span class="io-num po">5</span> <span class="io-text">Drift Detection — scope changes caught in real time, auto-recalibrate <em>(20 sec)</em></span></div>
+  <div class="io-step"><span class="io-num po">6</span> <span class="io-text">Planning Agent + Forge <em>(AI quarterly planning, lock on apply — 15 sec)</em></span></div>
+  <div class="io-step"><span class="io-num po">7</span> <span class="io-text">Draft Initiative — one-liner, move on <em>(10 sec)</em></span></div>
+  <div class="io-punch po">Punchline: "The status deck wrote itself."</div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-po">1 — The Friday Problem</span>
+    <span class="timing">0:00</span>
+  </div>
+  <div class="script">
+    <p>"Alright — let's get into the system. Four views. Four roles. Same platform.</p>
+    <p>Starting with the Product Owner.</p>
+    <p>If you're a PO, you know the Friday ritual. Leadership sync in two hours. Jira open in three tabs. Confluence three sprints behind. Someone in Slack said <em>'we might slip on the API thing.'</em></p>
+    <p>Your job right now? Not product strategy. <span class="key">You're stitching a status deck.</span></p>
+    <p>Let me show you what that Friday looks like here."</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-po">2 — Execution Pulse</span>
+    <span class="timing">0:15</span>
+  </div>
+  <div class="script">
+    <span class="click">Log in as Joshi. Dashboard loads.</span>
+    <p>"Joshi logs in. First thing — <span class="key">Execution Pulse</span>. Sprint focus, improvements, regressions, net health, AI summary. All from real signals — PRs, tests, deployments. Not opinions.</p>
+    <p><span class="key">His status deck? Already written.</span>"</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-po">3 — A Real Project, Running Live</span>
+    <span class="timing">0:30</span>
+  </div>
+  <div class="stage-note">THIS is your credibility moment. You're not showing a concept — you're opening a live project. Walk through the tabs deliberately. Let the audience see the depth. Their reaction should be: "Wait, this is actually running?"</div>
+  <div class="script">
+    <span class="click">Click into the Deliveries Automation project — Futures &amp; Options.</span>
+    <p>"Now — before I show you the planning tools — let me open an actual project. This is <span class="key">Deliveries Automation — Futures and Options</span>. This is not a demo playground. This is a live project, actively being delivered.</p>
+    <p>Let me walk you through what the PO sees for a project that's already in motion.</p>
+    <span class="click">Click Context tab.</span>
+    <p>"<span class="key">Context</span> — every resource that was fed into the platform to build this project. Specifications, regulatory docs, existing system docs — all the raw inputs, preserved and traceable.</p>
+    <span class="click">Click Requirements tab.</span>
+    <p>"<span class="key">Requirements</span> — and not a three-line user story. These are extensively detailed functional and non-functional requirements. The system generated them from the context and the PO refined them.</p>
+    <span class="click">Click Architecture tab.</span>
+    <p>"<span class="key">Architecture</span> — logical diagrams, sequence diagrams, object models. Not a PDF someone drew once — this is generated, connected, and alive. We'll dive deeper into this in the Architect's view.</p>
+    <span class="click">Click Roadmap tab.</span>
+    <p>"<span class="key">Roadmap</span> — epics, user stories, timelines. All derived from the plan, all connected back to the requirements and architecture.</p>
+    <span class="click">Click ADR tab.</span>
+    <p>"And <span class="key">Architecture Decision Records</span> — capturing not just what was decided, but why. Every trade-off documented and linked.</p>
+    <p><span class="key">One project. Every artefact connected. Nothing floating in isolation.</span>"</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-po">4 — Agentic Scrum Master</span>
+    <span class="timing">1:10</span>
+  </div>
+  <div class="script">
+    <span class="click">Show sprint view / Agentic Scrum Master panel.</span>
+    <p>"Now — who turned all of that into sprints? Not Joshi. Not a scrum master in a Monday morning ceremony.</p>
+    <p>Once the plan was confirmed, the system introduced an <span class="key">Agentic Scrum Master</span>. It took the deliverables from that roadmap and automatically organized them into sprints. Stories created, sequenced, assigned — based on dependencies, capacity, and priority.</p>
+    <p><span class="key">Joshi didn't drag a single ticket.</span></p>
+    <p>And it doesn't stop at creation. The Agentic Scrum Master continuously monitors execution. A story slips? A priority changes? A new dependency surfaces? <span class="key">It reorganizes. The sprint adapts in real time.</span>"</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-po">5 — Drift Detection</span>
+    <span class="timing">1:35</span>
+  </div>
+  <div class="script">
+    <span class="click">Show drift indicator / Change Lock from PO perspective.</span>
+    <p>"And now the thing that POs lose sleep over. Scope creep. Silent priority shifts. A BA adds a requirement halfway through the sprint and nobody tells the PO until the retro.</p>
+    <p>Smart SDLC catches that the moment it happens. Any change that deviates from the locked plan — <span class="key">it flags it as drift</span>. Visible to the PO immediately. Not next week. Now.</p>
+    <p>Joshi sees the drift, sees the downstream impact, and decides — accept it or push back. If accepted, the roadmap and sprints <span class="key">automatically recalibrate</span>. Downstream stories adjust. Stakeholders get notified.</p>
+    <p><span class="key">No more surprises at the end of the sprint.</span>"</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-po">6 — Planning Agent + Forge</span>
+    <span class="timing">1:55</span>
+  </div>
+  <div class="script">
+    <span class="click">Click Planning Agent tab.</span>
+    <p>"Back to the broader view — his backlog grouped by <span class="key">North Star</span>, <span class="key">management directives</span>, <span class="key">customer asks</span>, <span class="key">production issues</span>. Quarterly roadmap at a glance.</p>
+    <span class="click">Click Planning Forge. AI recommendations appear.</span>
+    <p>"Planning Forge — AI recommends which items fit which quarter. Joshi reviews, tweaks, applies. Once applied — <span class="key">it locks.</span> Plan frozen. Team aligned."</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-po">7 — Draft Initiative (last, quick)</span>
+    <span class="timing">2:15</span>
+  </div>
+  <div class="stage-note">10 seconds. Show the click. One sentence. Done.</div>
+  <div class="script">
+    <span class="click">Click Draft Initiative.</span>
+    <p>"And if Joshi needs to create something entirely new — one prompt, hit generate. Full project with requirements, architecture, roadmap. We'll see the output of that in the architect's view.</p>
+    <p><span class="key">Everything the PO needs. One screen. Real projects, live sprints, no surprises.</span>"</p>
+  </div>
+  <div class="handoff">"That's the PO's world. But all those plans and roadmaps Joshi just locked? Someone has to make sure the architecture holds. Let's see that view."</div>
+</div>
+
+
+<!-- ================================================================== -->
+<!--  PERSONA 2: ARCHITECT                                              -->
+<!-- ================================================================== -->
+<div class="persona-banner persona-arch">
+  Architect <span class="timing-range">2:30 – 3:45</span>
+</div>
+
+<div class="intent-box arch">
+  <strong>What the audience should walk away feeling</strong>
+  "Architecture isn't a one-time PDF anymore. It stays alive, catches drift, and connects all the way to production."
+</div>
+
+<div class="inline-outline">
+  <div class="io-title">Your Roadmap For This Section</div>
+  <div class="io-step"><span class="io-num arch">1</span> <span class="io-text">Ask: "When did someone last check an ADR before writing a PR?" <em>(let silence answer — 15 sec)</em></span></div>
+  <div class="io-step"><span class="io-num arch">2</span> <span class="io-text">Architecture tab — living diagrams + ADR with "why" <em>(20 sec)</em></span></div>
+  <div class="io-step"><span class="io-num arch">3</span> <span class="io-text">Change Lock — drift made visible <em>(20 sec)</em></span></div>
+  <div class="io-step"><span class="io-num arch">4</span> <span class="io-text">Delivery Graph — THE moment. Let it render. Silence first. <em>(25 sec)</em></span></div>
+  <div class="io-punch arch">Punchline: "Root cause analysis becomes graph traversal."</div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-arch">1 — The Dead ADR</span>
+    <span class="timing">2:30</span>
+  </div>
+  <div class="script">
+    <p>"Architects — quick question. When was the last time someone on your team actually checked an ADR before writing a PR?</p>
+    <span class="pause">Let the silence answer.</span>
+    <p>"Exactly. You spend three weeks writing it. Thorough. Captures the why. Goes into Confluence. And then... it's never looked at again. Code drifts. Nobody notices until production breaks.</p>
+    <p><span class="key">Your ADRs are dead the day you publish them.</span> Let me show you what alive looks like."</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-arch">2 — Living Architecture</span>
+    <span class="timing">2:45</span>
+  </div>
+  <div class="script">
+    <span class="click">Navigate to Delivery Automation project → Architecture tab.</span>
+    <p>"This isn't a PDF. It's connected to the delivery graph. Logical diagrams, sequence diagrams, object models — all generated from the same intent that drives the requirements.</p>
+    <span class="click">Click into an ADR.</span>
+    <p>"Look — <em>what</em> was decided, <em>why</em>, the business intent, the constraints. And because this ADR is a node in the graph — <span class="key">when code drifts from this decision, the system flags it.</span>"</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-arch">3 — Change Lock</span>
+    <span class="timing">3:05</span>
+  </div>
+  <div class="script">
+    <span class="click">Click Change Lock tab.</span>
+    <p>"A BA adds a requirement after architecture was approved. Old world — that change silently breaks assumptions. Nobody notices until production.</p>
+    <p>Here? <span class="key">Change Lock</span>. The drift is visible. What changed, who changed it, does it conflict with an ADR. Accept, reject, or flag. And if accepted — roadmap and downstream stories update automatically.</p>
+    <p><span class="key">Architecture becomes enforceable. Not aspirational.</span>"</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-arch">4 — Delivery Graph (Crown Jewel)</span>
+    <span class="timing">3:20</span>
+  </div>
+  <div class="stage-note">THIS IS YOUR BIG MOMENT. Click it. Let the graph render. Stand back. Give the room 3 seconds of silence before you speak. Let their eyes do the work first.</div>
+  <div class="script">
+    <span class="click">Click Delivery Graph tab. Graph renders.</span>
+    <span class="pause">3 full seconds of silence. Let the room absorb it.</span>
+    <p>"Business intent... architecture decision... user story... code changeset... test case... production deployment. <span class="key">The full chain. Connected.</span></p>
+    <p>Something breaks in production? You don't start a three-day investigation. You walk the graph — from the alert to the deployment to the code to the design decision that caused it.</p>
+    <p><span class="key">Root cause analysis becomes graph traversal.</span>"</p>
+    <span class="pause">Let it land.</span>
+  </div>
+  <div class="audience">Quick pulse check to the room: "How many of you have an ADR that's more than a year old and still accurately reflects your production system?" — Wait for the silence. — "That silence is exactly what we solve."</div>
+  <div class="handoff">"So the architect can see every decision, every drift, every trace. But who's actually writing the code? Let's switch to the person who lives in the IDE all day."</div>
+</div>
+
+
+<!-- ================================================================== -->
+<!--  PERSONA 3: DEVELOPER                                              -->
+<!-- ================================================================== -->
+<div class="persona-banner persona-dev">
+  Developer <span class="timing-range">3:45 – 5:15</span>
+</div>
+
+<div class="intent-box dev">
+  <strong>What the audience should walk away feeling</strong>
+  "Don't make me search for context. Bring it to me. And don't slow me down with governance — wrap it around me."
+</div>
+
+<div class="inline-outline">
+  <div class="io-title">Your Roadmap For This Section</div>
+  <div class="io-step"><span class="io-num dev">1</span> <span class="io-text">The Rajesh story — "Don't touch it." <em>(quick, let them laugh — 15 sec)</em></span></div>
+  <div class="io-step"><span class="io-num dev">2</span> <span class="io-text">Log in as Deepa → IDE query → context at cursor <em>(the "wow" — 30 sec)</em></span></div>
+  <div class="io-step"><span class="io-num dev">3</span> <span class="io-text">CI/CD trigger + ServiceNow from same screen <em>(no context-switching — 20 sec)</em></span></div>
+  <div class="io-step"><span class="io-num dev">4</span> <span class="io-text">Same Delivery Graph — developer's lens <em>(callback to architect — 15 sec)</em></span></div>
+  <div class="io-punch dev">Punchline: "The context found her."</div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-dev">1 — The "Who Wrote This?" Problem</span>
+    <span class="timing">3:45</span>
+  </div>
+  <div class="script">
+    <p>"Developers. You're staring at <code>calculate_margin_threshold()</code>. No idea why it exists. You search Confluence — nothing. Slack — a thread from 2022. You ping three people. Two left the firm. The third one says:</p>
+    <p><em>'Rajesh wrote that. Don't touch it.'</em></p>
+    <span class="pause">Wait for the laugh. It'll come.</span>
+    <p>"<span class="key">That's context debt.</span> Now watch what happens when the system has the answer."</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-dev">2 — Context at the Cursor</span>
+    <span class="timing">4:00</span>
+  </div>
+  <div class="script">
+    <span class="click">Log in as Deepa Kumar. Open IDE view.</span>
+    <p>"Deepa. Same function. She types one question into the Smart SDLC panel:</p>
+    <p><span class="key">'What does this code do and why does it exist?'</span></p>
+    <span class="click">Type the query. Results surface.</span>
+    <p>"Watch. The system doesn't just read the code — it walks the same delivery graph we just saw in the architect's view. And back comes: the architecture decision that created this logic, the business intent behind it, the regulatory constraint it satisfies, the test cases validating it.</p>
+    <p>All of that. Seconds. Right at her cursor.</p>
+    <p>She didn't leave her IDE. Didn't open Confluence. Didn't ping anyone.</p>
+    <p><span class="key">The context found her.</span>"</p>
+    <span class="pause">Let it land.</span>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-dev">3 — Build &amp; Ship Without Breaking Flow</span>
+    <span class="timing">4:30</span>
+  </div>
+  <div class="script">
+    <span class="click">Show developer action panel.</span>
+    <p>"It's not just context. From right here — she selects a user story, one click, CI/CD pipeline fires. Picks two in-progress stories, creates a ServiceNow change record — pre-populated with dependencies and approvals.</p>
+    <p>No context switching. No copy-pasting ticket numbers.</p>
+    <p><span class="key">She stays in flow. Governance happens around her — not because of her.</span>"</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-dev">4 — Same Graph, Different Lens</span>
+    <span class="timing">4:50</span>
+  </div>
+  <div class="script">
+    <span class="click">Show Delivery Graph from developer's view.</span>
+    <p>"And remember the Delivery Graph we just saw in the Architect's view? Deepa sees it too. Same truth. But her lens — focused on her code, her changesets, her tests.</p>
+    <p><span class="key">Same graph. Different lens.</span>"</p>
+  </div>
+  <div class="handoff">"So the PO plans it. The architect guards it. The developer builds it. But who's watching whether the business outcome is actually being delivered? One more view."</div>
+</div>
+
+
+<!-- ================================================================== -->
+<!--  PERSONA 4: DIRECTOR / LEADERSHIP                                  -->
+<!-- ================================================================== -->
+<div class="persona-banner persona-dir">
+  Director / Leadership <span class="timing-range">5:30 – 7:00</span>
+</div>
+
+<div class="intent-box dir">
+  <strong>What the audience should walk away feeling</strong>
+  "This isn't another dashboard. This answers the one question no tool has answered before: is the business intent actually being delivered?"
+</div>
+
+<div class="inline-outline">
+  <div class="io-title">Your Roadmap For This Section</div>
+  <div class="io-step"><span class="io-num dir">1</span> <span class="io-text">Monday inbox — "3 updates, 3 truths" <em>(two sharp lines — 10 sec)</em></span></div>
+  <div class="io-step"><span class="io-num dir">2</span> <span class="io-text">Director dashboard — initiatives, not tickets <em>(evidence-based health — 25 sec)</em></span></div>
+  <div class="io-step"><span class="io-num dir">3</span> <span class="io-text">Click initiative → full Intent-to-Production chain live <em>(20 sec)</em></span></div>
+  <div class="io-step"><span class="io-num dir">4</span> <span class="io-text">AI agent query + regulatory audit trace <em>(institutional proof — 20 sec)</em></span></div>
+  <div class="io-punch dir">Punchline: "Not a status deck. Institutional proof."</div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-dir">1 — The Monday Inbox</span>
+    <span class="timing">5:30</span>
+  </div>
+  <div class="script">
+    <p>"Last one. Leadership.</p>
+    <p>Monday morning. Three status updates. One says green. One says amber. The third doesn't mention the dependency that blows up Wednesday. <span class="key">You have dashboards that show activity. None that show whether the business intent is actually being delivered.</span></p>
+    <p>That changes here."</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-dir">2 — Initiatives, Not Tickets</span>
+    <span class="timing">5:40</span>
+  </div>
+  <div class="script">
+    <span class="click">Switch to Director dashboard.</span>
+    <p>"No Jira tickets. <span class="key">Initiatives mapped to outcomes.</span> Each one shows health based on evidence — stories done? Tests passing? Deployed? Runtime stable?</p>
+    <span class="click">Click on an initiative. Chain opens.</span>
+    <p>"Click any initiative — full chain. Strategy → Epics → Code → Tests → Deployment → Runtime. <span class="key">Live. Not last week's PowerPoint.</span></p>
+    <p>If a Q1 initiative slips because of a dependency, you don't wait for the next sync. The system shows it now — the reason and the downstream impact already calculated."</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-dir">3 — Signal, Not Noise</span>
+    <span class="timing">6:10</span>
+  </div>
+  <div class="script">
+    <p>"The director can ask the system: <span class="key">'Which initiatives are at risk this quarter, and why?'</span> Answer comes from the graph. Traceability, not guesswork.</p>
+    <p>Regulatory audit? Click on the CFTC initiative. Trace from the regulatory requirement → architecture decision → code change → test → deployment that proves it's live.</p>
+    <p><span class="key">That's not a status deck. That's institutional proof.</span></p>
+    <span class="pause">Let it land. 2 seconds.</span>
+    <p><span class="key">Governance by architecture. Not by committee.</span>"</p>
+  </div>
+  <div class="audience">If the room is with you: "Show of hands — how many status decks did your org produce last month? Now imagine if all of that time went back into building product." — Let that sink in.</div>
+</div>
+
+
+<!-- ================================================================== -->
+<!--  WRAP + TRANSITION                                                  -->
+<!-- ================================================================== -->
+<div class="persona-banner" style="background: #1B1F3B; border-radius: 4px 4px 0 0;">
+  Wrap &amp; Transition <span class="timing-range">7:00 – 7:30</span>
+</div>
+
+<div class="inline-outline">
+  <div class="io-title">Your Roadmap For The Close</div>
+  <div class="io-step"><span class="io-num" style="background:#1B1F3B;">1</span> <span class="io-text">Name all four roles + what each got <em>(three sentences)</em></span></div>
+  <div class="io-step"><span class="io-num" style="background:#1B1F3B;">2</span> <span class="io-text">Reinforce "same graph, different lens"</span></div>
+  <div class="io-step"><span class="io-num" style="background:#1B1F3B;">3</span> <span class="io-text">Tease: "You're wondering how. Let me take you under the hood."</span></div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-label label-trans">The Thread</span>
+    <span class="timing">7:00</span>
+  </div>
+  <div class="script">
+    <p>"Four roles. Four problems that every one of you in this room has felt.</p>
+    <p>The PO stops building decks — the system already knows. The Architect's decisions stay alive and catch drift before production does. The Developer gets context at the cursor instead of playing detective. And the Director finally gets signal — not status.</p>
+    <p><span class="key">Same delivery graph underneath. Same source of truth. Every role sees their world — connected to everyone else's.</span></p>
+    <span class="pause">Build curiosity. Lean into the mic slightly.</span>
+    <p>"Now — you saw a one-line prompt produce architecture. You saw the graph trace intent all the way to production. You saw governance without a single extra meeting.</p>
+    <p>I can see the question on your faces: <em>how does it actually work?</em></p>
+    <p><span class="key">Let me take you under the hood.</span>"</p>
+  </div>
+</div>
+
+
+<!-- ================================================================== -->
+<!--  APPENDIX                                                           -->
+<!-- ================================================================== -->
+<div class="persona-banner" style="background: #555; border-radius: 4px 4px 0 0;">
+  How To Deliver This Without Memorizing It
+</div>
+
+<div class="section">
+  <div class="script" style="font-size: 14px; color: #444;">
+    <p><strong style="color: #E8652A; font-size: 16px;">The only things you need to remember:</strong></p>
+
+    <p style="margin-top: 16px; font-size: 15px;"><strong>Four punchlines.</strong> That's it. Everything else is you talking naturally around them.</p>
+    <p style="margin-left: 20px; font-size: 15px; color: #2E7D5B; margin-top: 6px;">PO — <em>"The status deck wrote itself."</em></p>
+    <p style="margin-left: 20px; font-size: 15px; color: #7B4B94;">Architect — <em>"Root cause analysis becomes graph traversal."</em></p>
+    <p style="margin-left: 20px; font-size: 15px; color: #2C5F8A;">Developer — <em>"The context found her."</em></p>
+    <p style="margin-left: 20px; font-size: 15px; color: #D4A843;">Director — <em>"Not a status deck. Institutional proof."</em></p>
+
+    <p style="margin-top: 20px; font-size: 15px;"><strong>Four pain openers — shorter each time.</strong> PO gets the full Friday story (20 sec). Architect gets a question + two lines. Developer gets the Rajesh joke. Director gets two sharp sentences. By the fourth persona, the audience already knows the pattern — they're waiting for the solution, not the pain. Give it to them fast.</p>
+
+    <p style="margin-top: 20px; font-size: 15px;"><strong>One repeating phrase.</strong> <em>"Same graph. Different lens."</em> Say it at least twice. It's the one sentence the audience will remember after lunch.</p>
+
+    <p style="margin-top: 24px; border-top: 2px solid #eee; padding-top: 18px;"><strong>Practical tips:</strong></p>
+
+    <p style="margin-top: 10px;"><strong>Use the inline outlines.</strong> Each persona section has a numbered roadmap right at the top. If you lose your place, look at the roadmap — it tells you what step you're on and what's next.</p>
+
+    <p style="margin-top: 10px;"><strong>Talk to the room, not the screen.</strong> Click the thing. Let it load. <em>Then</em> turn to the audience. The screen is evidence. Your voice is the story.</p>
+
+    <p style="margin-top: 10px;"><strong>When someone asks "how" — defer.</strong> Say: <em>"That's exactly what I'm going to show you in the next section."</em> This demo is about what the system does for each role. The architecture deep-dive answers how it works.</p>
+
+    <p style="margin-top: 10px;"><strong>Silence is your weapon.</strong> After the Delivery Graph renders — wait. After a punchline — wait. Two seconds of silence makes the line land harder than thirty seconds of explanation.</p>
+
+    <p style="margin-top: 10px;"><strong>The audience hooks are optional but powerful.</strong> The ADR question, the Rajesh laugh, the status-deck show of hands — these turn a demo into a conversation. Use whichever ones the room energy supports. Drop them if you're running tight on time.</p>
+
+    <p style="margin-top: 10px;"><strong>Transitions build momentum.</strong> Each handoff teases the next persona: "All those plans Joshi locked? Someone has to guard the architecture..." — this keeps the audience leaning forward instead of resetting between sections.</p>
+  </div>
+</div>
+
+</body>
+</html>
